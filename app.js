@@ -25,13 +25,19 @@ app.use(session({
     saveUninitialized: false
   }));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  if(req.session.user){
+    res.locals.user=req.session.user;
+    res.locals.lastName = req.session.lastName;
+    res.locals.isAdmin = req.session.isAdmin;
+  }
+  next();
+  //next(createError(404));
 });
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
 // error handler
 app.use(function(err, req, res, next) {

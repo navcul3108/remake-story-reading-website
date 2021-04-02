@@ -1,0 +1,10 @@
+extends ../layout.pug
+
+block content 
+    link(rel="stylesheet" href="/stylesheets/users.css")
+    .d-flex.flex-row.align-items-center.justify-content-center.w-100.h-100#users-form
+        form.border.rounded.border-secondary.p-5.w-50.h-25(action="/users/logout", method="post")
+            h3.text-center.text-white You have logged in as #{user}
+            .mt-3.form-group.d-flex.justify-content-around
+                a(type="button" href="/").btn.btn-success Continue reading 
+                button(type="submit").btn.btn-danger Logout

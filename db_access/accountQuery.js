@@ -34,7 +34,13 @@ async function createAccount(email, password, firstName, lastName){
     return isSucess;
 }
 
-
+/**
+ * Create an account with default role.
+ *
+ * @param {*} email
+ * @param {*} password
+ * @return {Array} isValid, isAdmin, lastName 
+ */
 async function authenticateAccount(email, password){
     const conn = await mysql.createConnection(connConfig);
     const queryString = `Select last_name From account where email="${email}" and password="${password}"`;
