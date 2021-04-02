@@ -1,0 +1,22 @@
+body{
+    padding: 0rem;
+}
+
+a.link{
+    color: blue;
+    text-decoration: underline;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#users-form{
+    background-image: url("/images/users-background.jpg");
+    background-size: cover;
+    min-height: 100vh;
+}
+
+form{
+    background-color: rgba(35, 232, 229, 0.7);
+}
+form label{
+    color: whitesmoke;
+}
