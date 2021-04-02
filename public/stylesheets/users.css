@@ -14,9 +14,9 @@ a.link{
     min-height: 100vh;
 }
 
-form{
+#users-form>form{
     background-color: rgba(35, 232, 229, 0.7);
 }
-form label{
+#users-form>form label{
     color: whitesmoke;
 }

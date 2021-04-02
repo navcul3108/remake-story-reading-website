@@ -2,20 +2,20 @@ extends ../layout.pug
 block content
     link(rel="stylesheet" href="/stylesheets/users.css")
     .d-flex.flex-row.align-items-center.justify-content-center.w-100.h-100#users-form
-            form.p-5.border.rounded.border-secondary.w-50.h-75(action="/users/login", method="post")
-                if type && type=="failure" 
-                    a.text-danger= message
-                else if type && type=="success"
-                    a.text-success=message
-                .form-group
-                    h3.text-white Login form
-                .form-group 
-                    label(for="userEmail") Email 
-                    input.form-control(type="email" id="userEmail" aria-describedby="Your email" name="email")
-                .form-group 
-                    label(for="userPassword") Password 
-                    input.form-control(type="password" id="userPassword" placeholder="Your password" name="password")
-                .form-group
-                    a.link(href="/users/signup") Does not have an account. Register now!
-                button.btn.btn-primary(type="submit") Login
+        form.p-5.border.rounded.border-secondary.w-50.h-75(action="/users/login", method="post")
+            if type && type=="failure" 
+                a.text-danger= message
+            else if type && type=="success"
+                a.text-success=message
+            .form-group
+                h3.text-white Login form
+            .form-group 
+                label(for="userEmail") Email 
+                input.form-control(type="email" id="userEmail" aria-describedby="Your email" name="email")
+            .form-group 
+                label(for="userPassword") Password 
+                input.form-control(type="password" id="userPassword" placeholder="Your password" name="password")
+            .form-group
+                a.link(href="/users/signup") Does not have an account. Register now!
+            button.btn.btn-primary(type="submit") Login
                 
