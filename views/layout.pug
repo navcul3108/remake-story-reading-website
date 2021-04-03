@@ -6,9 +6,15 @@ html
     link(rel='stylesheet', href='/stylesheets/bootstrap/bootstrap.min.css')
     link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Nunito")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous")
+    link(rel="stylesheet" href="/stylesheets/kendoui/kendo.common.min.css")
+    link(rel="stylesheet" href="/stylesheets/kendoui/kendo.default.min.css")
+    link(rel="stylesheet" href="/stylesheets/kendoui/kendo.default.mobile.min.css")
+
     script(src="https://code.jquery.com/jquery-3.5.1.min.js")
     script(src="/javascripts/bootstrap/bootstrap.bundle.min.js" ) 
     script(src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-RXf+QSDCUQs5uwRKaDoXt55jygZZm2V++WUZduaU/Ui/9EGp3f/2KZVahFZBKGH0s774sd3HmrhUy+SgOFQLVQ==" crossorigin="anonymous")
+    script(src="/javascripts/kendoui/jquery.min.js")
+    script(src="/javascripts/kendoui/kendo.all.min.js")  
   body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       a.navbar-brand
@@ -37,13 +43,27 @@ html
                 span.fa-2x.fas.fa-user.mr-2
                 p.d-inline= lastName
               .dropdown-menu.dropdown-menu-right(aria-labelledby="accountDropdown")
-                a.dropdown-item Profile
-                a.dropdown-item Favourite list
-                a.dropdown-item Reading history 
+                a.dropdown-item 
+                  span.fa-2x.fas.fa-id-badge.mr-2
+                  h5.d-inline Profile
+                a.dropdown-item 
+                  span.fa-2x.fas.fa-star.mr-2
+                  h5.d-inline Favourite list
+                a.dropdown-item  
+                  span.fa-2x.fas.fa-history.mr-2
+                  h5.d-inline Reading history
                 if isAdmin 
-                  a.dropdown-item Upload story
+                  a.dropdown-item 
+                    span.fa-2x.fas.fa-upload.mr-2
+                    h5.d-inline Upload story
+                  a.dropdown-item(href="/genre/manage") 
+                    span.fa-2x.fas.fa-th.mr-2
+                    h5.d-inline Manage                 
                 .dropdown-divider
-                a.dropdown-item(href="/users/logout") Log out
+                form.form-inline(action="/users/logout" method="post")
+                  button.dropdown-item(type="submit")
+                    span.fa-2x.fas.fa-sign-out-alt.mr-2
+                    h5.d-inline Log out
         else 
           ul.navbar-nav.ml-auto
             li.nav-item.mr-2

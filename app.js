@@ -5,8 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require("express-session");
 
-const indexRouter = require('./routes/index');
+const storyRouter = require('./routes/story');
 const usersRouter = require('./routes/users');
+const genreRouter = require("./routes/genre");
 
 var app = express();
 
@@ -36,8 +37,13 @@ app.use(function(req, res, next) {
   //next(createError(404));
 });
 
-app.use('/', indexRouter);
+app.use('/story', storyRouter);
 app.use('/users', usersRouter);
+app.use("/genre", genreRouter);
+
+app.get("/", (req, res)=>{
+  res.redirect("story/");
+})
 
 // error handler
 app.use(function(err, req, res, next) {
