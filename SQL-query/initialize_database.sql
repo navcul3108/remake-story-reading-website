@@ -18,11 +18,13 @@ Create Table If Not Exists `role`(
     foreign key(email) references `account`(email)
 );
 
+Drop Table genre;
 Create Table If Not Exists genre(
-	id					smallint			primary key,
+	id					smallint			primary key			auto_increment,
     `name`				nvarchar(100),
     `description`		text
 );
+Insert Into genre(`name`, `description`) Values("Other", "The genre that the story is not belong to any specific genre else!");
 
 Create Table If Not Exists story(
 	id					varchar(36)			primary key,
@@ -31,16 +33,26 @@ Create Table If Not Exists story(
     author				nvarchar(100),
     upload_time			datetime,
     last_modified		datetime,
-    image_path			varchar(50),
+    image_path			varchar(100),
     num_chapters		integer,
+    genre_id			smallint,
     rating				float				default 0
 );
+
+
+-- Drop table comment;
+-- Drop table reading_history;
+-- Drop table rating;
+-- Drop table story_chapter;
+-- drop table story;
 
 Create Table If Not Exists story_chapter(
 	story_id			varchar(36),
     title				nvarchar(100),
     `index`				integer,
     file_name			varchar(50),		-- format: <story id>_<chapter index>.pdf
+	start_page			integer,
+    end_page			integer,
 	
     primary key(story_id, `index`),
     foreign key(story_id) references story(id)

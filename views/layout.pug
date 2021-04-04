@@ -15,6 +15,7 @@ html
     script(src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-RXf+QSDCUQs5uwRKaDoXt55jygZZm2V++WUZduaU/Ui/9EGp3f/2KZVahFZBKGH0s774sd3HmrhUy+SgOFQLVQ==" crossorigin="anonymous")
     script(src="/javascripts/kendoui/jquery.min.js")
     script(src="/javascripts/kendoui/kendo.all.min.js")  
+    script(src="/javascripts/common.js")
   body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       a.navbar-brand
@@ -26,12 +27,8 @@ html
         ul.navbar-nav.mr-auto 
           li.nav-item.dropdown 
             a.nav-link.dropdown-toggle#genreDropdown(role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Genres
-            .dropdown-menu(aria-labelledby="genreDropdown")
-              a.dropdown-item All
-              a.dropdown-item Science Fiction 
-              a.dropdown-item Novel 
-              a.dropdown-item Comic
-              a.dropdown-item Drama
+            .dropdown-menu#genre-menu(aria-labelledby="genreDropdown")
+              a.dropdown-item(href="/") All
         form.form-inline.my-2.my-lg-0(action="/story/search" method="get")
           input.form-control.mr-sm-2(type="search" placeholder="Story name" aria-label="Search") 
           button.btn.btn-outline-success.my-2.my-sm-0(type="submit")
@@ -43,22 +40,24 @@ html
                 span.fa-2x.fas.fa-user.mr-2
                 p.d-inline= lastName
               .dropdown-menu.dropdown-menu-right(aria-labelledby="accountDropdown")
-                a.dropdown-item 
-                  span.fa-2x.fas.fa-id-badge.mr-2
-                  h5.d-inline Profile
-                a.dropdown-item 
-                  span.fa-2x.fas.fa-star.mr-2
-                  h5.d-inline Favourite list
-                a.dropdown-item  
-                  span.fa-2x.fas.fa-history.mr-2
-                  h5.d-inline Reading history
                 if isAdmin 
-                  a.dropdown-item 
+                  a.dropdown-item(href="/story/upload") 
                     span.fa-2x.fas.fa-upload.mr-2
                     h5.d-inline Upload story
                   a.dropdown-item(href="/genre/manage") 
                     span.fa-2x.fas.fa-th.mr-2
-                    h5.d-inline Manage                 
+                    h5.d-inline Manage  
+                else 
+                  a.dropdown-item 
+                    span.fa-2x.fas.fa-id-badge.mr-2
+                    h5.d-inline Profile
+                  a.dropdown-item 
+                    span.fa-2x.fas.fa-star.mr-2
+                    h5.d-inline Favourite list
+                  a.dropdown-item  
+                    span.fa-2x.fas.fa-history.mr-2
+                    h5.d-inline Reading history
+                  
                 .dropdown-divider
                 form.form-inline(action="/users/logout" method="post")
                   button.dropdown-item(type="submit")
