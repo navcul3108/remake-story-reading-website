@@ -36,6 +36,7 @@ Create Table If Not Exists story(
     image_path			varchar(100),
     num_chapters		integer,
     genre_id			smallint,
+    num_pages			integer,
     rating				float				default 0
 );
 

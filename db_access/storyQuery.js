@@ -74,12 +74,12 @@ async function createStoryChapters(id, chapters){
     return isSucess;
 }
 
-async function createStory(id, name, author, description, image_path, num_chapters, genre_id, chapters, uploadFilePath){
+async function createStory(id, name, author, description, image_path, num_chapters, genre_id, num_pages, chapters, uploadFilePath){
     const conn = await mysql.createConnection(connConfig);
     let isSucess = true;
     const now = new Date();
-    await conn.execute("Insert into story(id, name, description, author, upload_time, last_modified, image_path, num_chapters, genre_id) Values(?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-                        [id, name, description, author, now, now, image_path, num_chapters, genre_id])
+    await conn.execute("Insert into story(id, name, description, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+                        [id, name, description, author, now, now, image_path, num_chapters, genre_id, num_pages])
                 .catch(err=>{
                     console.log(err);
                     conn.rollback();

@@ -4,6 +4,7 @@ var multer = require("multer");
 const uuid = require("uuid");
 const fs = require("fs");
 const storyQuery = require('../db_access/storyQuery');
+const path = require("path");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb)=>{
@@ -14,8 +15,8 @@ const storage = multer.diskStorage({
     cb(null, folderDir);
   },
   filename: (req, file, cb)=>{
-    const filename = file.originalname.replace(/.pdf/g, "");
-    cb(null, filename.replace(/[/\\?%*: |"<>]/g, '-').replace(/[^a-zA-Z0-9_]/g, '_')+'-'+uuid.v1()+".pdf");
+    const format = file.originalname.split(".").pop();
+    cb(null, uuid.v1()+"."+format);
   }
 })
 
@@ -26,17 +27,37 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.use("/upload", (req, res, next)=>{
+  if(req.session.isAdmin)
+    return next();
+  else
+    res.render("error", {message: "You are not admin!"});
+})
+
 router.get("/upload", (req, res)=>{
   res.render("story/upload");
 })
 
-router.post("/upload", upload.fields([{name:"file",maxCount:1}, {name:"coverImage", maxCount:1}]), async (req, res)=>{
+router.post("/upload", upload.fields([{name:"file",maxCount:1}, {name:"coverImage", maxCount:1}]), async (req, res)=>{ 
   const id = uuid.v1();
   let {body} = req;
   const numChapters = body.num_chapters;
   let storyFile = req.files.file[0];
   let coverImage = req.files.coverImage[0];
   let chapters = [];
+
+  fs.readdir("./public/temporFiles", (err, files) => {
+    if (err) throw err;
+  
+    for (const file of files) {
+      if(!file.includes(storyFile.filename) && !file.includes(coverImage.filename)){
+        fs.unlink(path.join(path.resolve("./public/temporFiles/"), file), err => {
+          if (err) throw err;
+        });  
+      }
+    }
+  });
+
 
   for(var i=1;i<=numChapters;i++)
   {
@@ -51,7 +72,7 @@ router.post("/upload", upload.fields([{name:"file",maxCount:1}, {name:"coverImag
   const format = coverImage.originalname.split(".").pop();      
 
   const successFlag = await storyQuery.createStory(id, body.name, body.author, body.description, `/images/cover/${id}.${format}`, body.num_chapters,
-                                                   body.genre, chapters, "./"+storyFile.path);
+                                                   body.genre, body.num_pages, chapters, "./"+storyFile.path);
   if(successFlag){
     res.render("success", {message: "You have upload story successfully!"});
     if(!fs.existsSync("./public/images/cover/"))

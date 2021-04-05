@@ -23,11 +23,11 @@ $(document).ready(function(){
                             dataValueField: "id"   
                         }
                     }
-                    
                 ]
             },
             {field: "description", label: "Description", editor: "Editor", attributes: {autocomplete: true}},
             {field: "num_chapters", label: "Number of chapters", validation: {required: true}, attributes: {style: "width: 30%", type:"number", min: 1, max: 20, placeholder: 1, onchange: "changeNumberChapters()"}},
+            {field: "num_pages", label: "Number of pages", validation: {required: true}, attributes: {style: "width: 30%", type:"number", min: 1, placeholder: 1, onchange: "setLimitPageNumber()"}},                    
             {
                 type: "group",
                 label: "Specify chapter page",
@@ -86,6 +86,12 @@ function changeNumberChapters(){
         items: pageItems
     }),
     $("#specified-pages .k-form-buttons").remove();
+    setLimitPageNumber();
+}
+
+function setLimitPageNumber(){
+    console.log($("#num_pages").val());
+    $('#specified-pages input[type="number"]').attr("max", $("#num_pages").val());
 }
 
 function validateFormInput(){
@@ -116,10 +122,26 @@ function validateFormInput(){
             return false;
         }    
     }    
-    if($(".k-file-name").length!=2)
+
+    if($(".k-file").length<2)
     {
-        $("#upload-error").text("You can submit only one file!");
+        $("#upload-error").text(`You must submit both cover image and story file!`);
         return false;
-    }    
-    return true;
+    }
+    else{
+        const coverImageUpload = $(".k-file")[0];
+        const storyUpload = $(".k-file")[1];
+    
+        if($(storyUpload).find(".k-file-name").length!=1)
+        {
+            $("#upload-error").text("You can submit only one file!");
+            return false;
+        }    
+    
+        if($(coverImageUpload).find(".k-file-name").length!=1){
+            $("#upload-error").text("The cover image is only one file!");
+            return false;
+        }
+        return true;
+    }
 }
