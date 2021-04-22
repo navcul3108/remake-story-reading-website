@@ -1,4 +1,45 @@
 extends ../layout.pug
 
-block content 
-    
+block content
+  style.
+    .carousel{
+      max-height: 50rem;
+    }
+
+  div 
+    h1.text-center.text-info List of stories
+  .container
+    .carousel.slide#carousel(data-ride="carousel")
+      .carousel-inner
+        each bucket in buckets 
+          .carousel-item.active
+            .row
+              each story in bucket
+                .col-md-3
+                  .card
+                    img.card-img-top.d-block.img-fluid(src=`${story.image_path}`)
+                    .card-body
+                      h5.card-title.text-primary= story.name
+                      h5.card-title.text-secondary= story.author
+                    .card-body
+                      a.card-link(href=`/story/overview?id=${story.id}`) Read it
+      a.carousel-control-prev.h-25.m-auto(href="#carousel" role="button" data-slide="prev")
+        span.carousel-control-prev-icon(aria-hidden="true")
+        span.sr-only Prev
+      a.carousel-control-next.h-25.m-auto(href="#carousel" role="button" data-slide="next")
+        span.carousel-control-next-icon(aria-hidden="true")
+        span.sr-only Next
+
+
+  //- .container
+  //-   each bucket, idx in buckets 
+  //-     .row
+  //-       each story, idx2 in bucket
+  //-         .col-md-3
+  //-           .card
+  //-             img.card-img-top.h-50(src=`${story.image_path}`)
+  //-             .card-body
+  //-               h5.card-title.text-primary= story.name
+  //-               h5.card-title.text-secondary= story.author
+  //-             .card-body
+  //-               a.card-link(href=`/story/overview?id=${story.id}`) Read it

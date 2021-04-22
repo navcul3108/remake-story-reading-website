@@ -23,8 +23,21 @@ const storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', async (req, res)=> {
+  const genre_id = req.params.genre_id;
+  const list_story = await storyQuery.listStory(genre_id);
+  const num_buckets = Math.floor(list_story.length / 4) +1;
+  const chunk_size = 4;
+  let buckets = [];
+  for(var i=0;i<num_buckets;i++){
+    if((i+1)*chunk_size<list_story.length-1){
+      buckets.push(list_story.slice(i*chunk_size, (i+1)*chunk_size-1));
+    }
+    else
+      buckets.push(list_story.slice(i*chunk_size));
+  }
+  console.log(buckets);
+  res.render('story/index', { title: 'Express', buckets: buckets });
 });
 
 router.use("/upload", (req, res, next)=>{
@@ -83,6 +96,16 @@ router.post("/upload", upload.fields([{name:"file",maxCount:1}, {name:"coverImag
   else
     res.render("error", {message: "There is an error while processing story uploading, please try again!"});
   fs.rmSync(coverImage.path);
+})
+
+router.get("/overview/:id", async (req, res)=>{
+  const id = req.params.id;
+
+  const storyInformation = await storyQuery.getStoryInformation(id);
+  if(storyInformation==null)
+    res.render("error", {message: "The story that you find is not exists!"});
+  else
+    res.render("story/overview", {info: storyInformation});
 })
 
 module.exports = router;

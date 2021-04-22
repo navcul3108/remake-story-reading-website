@@ -95,6 +95,54 @@ async function createStory(id, name, author, description, image_path, num_chapte
     return isSucess;
 }
 
+async function listStory(genre_id){
+    console.log(genre_id)
+    const conn = await mysql.createConnection(connConfig);
+    let row = null, _= null;
+    if(genre_id==null){
+        [rows, _] = await conn.query("Select id, name, author, image_path, genre_id, rating From story");
+    }
+    else{
+        [rows, _] = await conn.query("Select id, name, author, image_path, genre_id, rating From story where id = ?", [genre_id]);
+    }
+    let result = [];
+    for(row of rows)
+        result.push({
+           id: row.id,
+           name: row.name,
+           author: row.author,
+           genre_id: row.genre_id,
+           image_path: row.image_path,
+           rating: row.rating               
+        })
+    return result;
+}
+
+async function getStoryInformation(id){
+    const conn = await mysql.createConnection(connConfig);
+    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating From story where id = ?", [id]);
+    if(rows.length==1){
+        const row = rows[0];
+        return {
+            id: id, 
+            name: row.name,
+            description: row.description,
+            author: row.author,
+            upload_time: row.upload_time,
+            last_modified: row.last_modified,
+            image_path: row.image_path,
+            num_chapters: row.num_chapters,
+            genre_id: row.genre_id, 
+            num_pages: row.num_pages,
+            rating: row.rating
+        }
+    }
+    else
+        return null;
+}
+
 module.exports = {
-    createStory: createStory
+    createStory: createStory,
+    getStoryInformation: getStoryInformation,
+    listStory: listStory
 }
