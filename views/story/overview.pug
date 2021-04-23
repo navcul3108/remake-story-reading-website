@@ -1,0 +1,48 @@
+extends ../layout.pug
+
+block content 
+  link(rel="stylesheet", href="/stylesheets/story.css")
+  .story-info
+    #story-overview.border.border-primary
+      .story-image
+        img(src=`${story_info.image_path}` alt="Image not found!")
+      .story-info
+        table.table 
+          tbody 
+            tr 
+              td <h4>Tên truyện</h4>
+              td
+                h2.text-primary= story_info.name
+            tr 
+              td <h4>Thể loại</h4> 
+              td 
+                h2
+                  span.badge.badge-danger= story_info.genre_name
+            tr 
+              td <h4>Tác giả</h4> 
+              td
+                h3.text-secondary= story_info.author
+            tr 
+              td <h4>Số chương</h4> 
+              td
+                h4.text-info= story_info.num_chapters
+            tr 
+              td <h4>Mô tả</h4>
+              td 
+                p= story_info.description
+
+    .list-chapters
+      h2.text-info.mb-2 Danh sách chương truyện 
+      table.table.table-striped.border.border-secondary
+        thead.thead-dark
+          th.first Tên chương
+          th Số trang
+        tbody 
+          each chapter in story_info.chapters 
+            tr 
+              td.first
+                a(href=`${chapter.link}`)= chapter.title
+              td.text-center= chapter.num_page
+    .d-flex.justify-content-center.mt-2 
+      a.btn.btn-success.m-2(href=`${story_info.chapters[0].link}`) Đọc chương đầu 
+      a.btn.btn-info.m-2(href=`${story_info.chapters[story_info.num_chapters-1].link}`) Đọc chương cuối

@@ -18,13 +18,13 @@ Create Table If Not Exists `role`(
     foreign key(email) references `account`(email)
 );
 
-Drop Table genre;
 Create Table If Not Exists genre(
 	id					smallint			primary key			auto_increment,
     `name`				nvarchar(100),
     `description`		text
 );
 Insert Into genre(`name`, `description`) Values("Other", "The genre that the story is not belong to any specific genre else!");
+Select * from genre;
 
 Create Table If Not Exists story(
 	id					varchar(36)			primary key,
@@ -35,10 +35,25 @@ Create Table If Not Exists story(
     last_modified		datetime,
     image_path			varchar(100),
     num_chapters		integer,
-    genre_id			smallint,
+    genre_id			smallint not null default(1),
     num_pages			integer,
     rating				float				default 0
 );
+
+-- Create Table If Not exists story_genre(
+-- 	story_id			varchar(36),
+--     genre_id			smallint,
+--     
+--     primary key(story_id, genre_id),
+--     foreign key(story_id) references story(id),
+--     foreign key(genre_id) references genre(id)
+-- );
+
+Drop view story_and_genre_view;
+-- create view story_and_genre_view as
+-- Select story.*, story_genre.genre_id, genre.`name` as genre_name, genre.`description` as genre_description 
+-- from story, story_genre, genre
+-- where story.id = story_genre.story_id and story_genre.genre_id = genre.id;
 
 
 -- Drop table comment;

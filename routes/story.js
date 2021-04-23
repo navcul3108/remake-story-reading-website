@@ -40,6 +40,26 @@ router.get('/', async (req, res)=> {
   res.render('story/index', { title: 'Express', buckets: buckets });
 });
 
+router.get("/overview",async (req, res)=>{
+  const story_id = req.query.id;
+  if(story_id.length!==36){
+    res.render("error", {message: "There is no story that you are finding!"});
+  }
+  else{
+    const story_info = await storyQuery.getStoryInformation(story_id, true);
+    if(story_info==null)
+      res.render("error", {message: "There is no story that you are finding!"});
+    else
+      res.render("story/overview", {story_info: story_info});
+  }  
+})
+
+router.get("/read", (req, res)=>{
+  const id = req.query.id;
+  const index = req.query.index;
+})
+
+/* REGION: UPLOAD STORY */
 router.use("/upload", (req, res, next)=>{
   if(req.session.isAdmin)
     return next();

@@ -1,0 +1,26 @@
+#story-overview, .list-chapters{
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 3em;
+}
+
+#story-overview{
+    display: flex;
+    justify-items: first baseline;
+    padding: 1em;
+}
+
+.story-image{
+    max-width: 25%;
+    max-height: 40%;
+    margin-right: 5em;
+}
+
+.story-image>img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.list-chapters>table .first{
+    width: 90%;
+}

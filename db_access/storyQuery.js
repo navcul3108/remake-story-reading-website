@@ -4,7 +4,7 @@ const scissors = require("scissors");
 const fs = require("fs");
 const path = require("path");
 
-async function pageStoryIntoChapters(filePath, id, genreId, image_path, chapters)
+async function splitStoryIntoChapters(filePath, id, genreId, image_path, chapters)
 {
     if(!fs.existsSync(filePath))
         return false;
@@ -89,7 +89,7 @@ async function createStory(id, name, author, description, image_path, num_chapte
     if(isSucess){
         isSucess = await createStoryChapters(id, chapters);
         if(isSucess){
-            isSucess = await pageStoryIntoChapters(uploadFilePath, id, genre_id, image_path, chapters);
+            isSucess = await splitStoryIntoChapters(uploadFilePath, id, genre_id, image_path, chapters);
         }
     }
     return isSucess;
@@ -118,12 +118,12 @@ async function listStory(genre_id){
     return result;
 }
 
-async function getStoryInformation(id){
+async function getStoryInformation(id, return_chapters=false){
     const conn = await mysql.createConnection(connConfig);
-    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating From story where id = ?", [id]);
+    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating, genre_name, genre_description From story_and_genre_view where id = ?", [id]);
     if(rows.length==1){
         const row = rows[0];
-        return {
+        let story_info = {
             id: id, 
             name: row.name,
             description: row.description,
@@ -134,12 +134,30 @@ async function getStoryInformation(id){
             num_chapters: row.num_chapters,
             genre_id: row.genre_id, 
             num_pages: row.num_pages,
-            rating: row.rating
+            rating: row.rating,
+            genre_name: row.genre_name,
+            genre_description: row.genre_description
+        };
+        if(return_chapters){
+            const [rows2, fields2] = await conn.query("Select * from story_chapter where story_id=? order by `index` asc", [id]);
+            let chapters = rows2.map((row, idx)=>{
+                return {
+                    index: row.index,
+                    title: row.title,
+                    link : `/story/read?id=${id}&index=${row.index}`,
+                    start_page: row.start_page,
+                    end_page: row.end_page,
+                    num_page: row.end_page-row.start_page+1
+                }
+            });
+            story_info["chapters"] = chapters;
         }
+        return story_info;
     }
     else
         return null;
 }
+
 
 module.exports = {
     createStory: createStory,
