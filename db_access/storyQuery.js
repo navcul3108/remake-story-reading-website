@@ -105,6 +105,7 @@ async function listStory(genre_id){
     else{
         [rows, _] = await conn.query("Select id, name, author, image_path, genre_id, rating From story where id = ?", [genre_id]);
     }
+    await conn.end();
     let result = [];
     for(row of rows)
         result.push({
@@ -120,7 +121,7 @@ async function listStory(genre_id){
 
 async function getStoryInformation(id, return_chapters=false){
     const conn = await mysql.createConnection(connConfig);
-    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating, genre_name, genre_description From story_and_genre_view where id = ?", [id]);
+    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating, genre_name, genre_description From story_and_genre_view where id = ?", [id])
     if(rows.length==1){
         const row = rows[0];
         let story_info = {
@@ -152,15 +153,46 @@ async function getStoryInformation(id, return_chapters=false){
             });
             story_info["chapters"] = chapters;
         }
+        await conn.end();
         return story_info;
     }
-    else
+    else{
+        await conn.end();
         return null;
+    }
 }
 
+async function getChapterInformation(id, index){
+    if(index<=0)
+        return null;
+
+    const conn = await mysql.createConnection(connConfig);
+    const [rows, fields] = await conn.query("Select * from story_chapter where story_id=? and `index`=?", [id, index]);
+    if(rows.length==1){
+        let chapter_info = rows[0];
+        const [rows2, fields2] = await conn.query("Select name,num_chapters from story where id=?", [id]);
+        chapter_info.story_name = rows2[0].name;
+        chapter_info.prev_link = null;
+        chapter_info.next_link = null;
+        if(index>1)
+            chapter_info.prev_link = `/story/read?id=${id}&index=${index-1}`;
+        
+        if(index<rows2[0].num_chapters-1)
+            chapter_info.next_link = `/story/read?id=${id}&index=${index+1}`;
+
+        await conn.end();
+        return chapter_info;
+    }
+    else{
+        await conn.end();
+        return null;
+    }
+
+}
 
 module.exports = {
     createStory: createStory,
     getStoryInformation: getStoryInformation,
-    listStory: listStory
+    listStory: listStory,
+    getChapterInformation: getChapterInformation
 }

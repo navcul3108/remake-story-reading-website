@@ -43,20 +43,29 @@ router.get('/', async (req, res)=> {
 router.get("/overview",async (req, res)=>{
   const story_id = req.query.id;
   if(story_id.length!==36){
-    res.render("error", {message: "There is no story that you are finding!"});
+    res.render("error", {message: "Liên kết không tồn tại"});
   }
   else{
     const story_info = await storyQuery.getStoryInformation(story_id, true);
     if(story_info==null)
-      res.render("error", {message: "There is no story that you are finding!"});
+      res.render("error", {message: "Liên kết không tồn tại"});
     else
       res.render("story/overview", {story_info: story_info});
   }  
 })
 
-router.get("/read", (req, res)=>{
+router.get("/read",async (req, res)=>{
   const id = req.query.id;
-  const index = req.query.index;
+  const index = parseInt(req.query.index);
+  if(id.length!=36 || index<=0)
+    res.status(404).render("error", {message: "Liên kết không tồn tại"});
+  else{
+    const chapter_info = await storyQuery.getChapterInformation(id, index);
+    if(chapter_info==null)
+      res.status(404).render("error", {message: "Liên kết không tồn tại"});
+    else
+      res.render("story/read", {chapter_info: chapter_info});
+  }
 })
 
 /* REGION: UPLOAD STORY */

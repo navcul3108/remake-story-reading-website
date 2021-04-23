@@ -1,0 +1,20 @@
+extends ../layout.pug
+
+block content
+  #chapter-reading 
+    h2.text-center.text-primary.m-3= `${chapter_info.story_name}-${chapter_info.title}`
+    p#link-to-pdf(hidden)= chapter_info.file_name 
+    #pdf-viewer 
+    .d-flex.justify-content-center.mt-2
+      if chapter_info.prev_link 
+        a.btn.btn-success.m-2(href=`${chapter_info.prev_link}`) Đọc chương trước
+      if chapter_info.next_link 
+        a.btn.btn-info.m-2(href=`${chapter_info.next_link}`) Đọc chương sau
+      else 
+        a.btn.btn-info.m-2(href=`/story/overview?id=${chapter_info.story_id}`) Về trang truyện
+  style.
+    #pdf-viewer{
+      margin: auto;
+    }
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.2/pdf.js") 
+  script(src="/javascripts/story_read.js") 

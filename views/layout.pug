@@ -25,13 +25,15 @@ html
         span.navbar-toggler-icon
 
       .collapse.navbar-collapse.h-100.d-flex.justify-content-between#navbar-text 
-        ul.navbar-nav.mr-auto 
+        ul.navbar-nav.mr-auto
+          li.nav-item
+            a.nav-link(href="/story/") Trang chủ 
           li.nav-item.dropdown 
-            a.nav-link.dropdown-toggle#genreDropdown(role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Genres
+            a.nav-link.dropdown-toggle#genreDropdown(role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Thể loại
             .dropdown-menu#genre-menu(aria-labelledby="genreDropdown")
               a.dropdown-item(href="/") All
         form.form-inline.my-2.my-lg-0(action="/story/search" method="get")
-          input.form-control.mr-sm-2(type="search" placeholder="Story name" aria-label="Search") 
+          input.form-control.mr-sm-2(type="search" placeholder="Tên truyện" aria-label="Search") 
           button.btn.btn-outline-success.my-2.my-sm-0(type="submit")
             span.fas.fa-search
         if user

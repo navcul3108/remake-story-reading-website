@@ -49,12 +49,12 @@ Create Table If Not Exists story(
 --     foreign key(genre_id) references genre(id)
 -- );
 
-Drop view story_and_genre_view;
--- create view story_and_genre_view as
--- Select story.*, story_genre.genre_id, genre.`name` as genre_name, genre.`description` as genre_description 
--- from story, story_genre, genre
--- where story.id = story_genre.story_id and story_genre.genre_id = genre.id;
 
+create view story_and_genre_view as
+Select story.*, genre.`name` as genre_name, genre.`description` as genre_description 
+from story, genre
+where story.genre_id = genre.id;
+Select * from story_and_genre_view;
 
 -- Drop table comment;
 -- Drop table reading_history;
@@ -66,13 +66,15 @@ Create Table If Not Exists story_chapter(
 	story_id			varchar(36),
     title				nvarchar(100),
     `index`				integer,
-    file_name			varchar(50),		-- format: <story id>_<chapter index>.pdf
+    file_name			varchar(50),		-- format: /<story id>_<chapter index>.pdf
 	start_page			integer,
     end_page			integer,
 	
     primary key(story_id, `index`),
     foreign key(story_id) references story(id)
 );
+
+Select * from story_chapter where story_id="0e8d4630-95de-11eb-9924-5bd98a2cc98e" order by `index` ;
 
 Create Table If Not Exists reading_history(
 	story_id			varchar(36),
