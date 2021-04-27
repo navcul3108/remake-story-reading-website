@@ -5,3 +5,19 @@ $("#navbar-text").ready(function(){
         })
     })
 })
+
+$(document).ready(()=>{
+    $("#story-name-search").kendoAutoComplete({
+        dataSource: {
+            type: "json",
+            transport: {
+                read: "/story/all-name"
+            },
+            //serverFiltering: true,
+        },
+        filter: "contains",
+        placeholder: "Tên truyện...",
+        minLength: 2,
+        ignoreCase: true
+    })
+})

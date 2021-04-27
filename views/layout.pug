@@ -18,26 +18,35 @@ html
     script(src="/javascripts/kendoui/kendo.all.min.js")  
     script(src="/javascripts/common.js")
   body
+    style.
+      .navbar-brand>img{
+        height: 3rem;
+        max-height: 3rem;
+        object-fit: fill;
+        width: 4rem;
+      }
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       a.navbar-brand
-        image(src="/images/logo.png" width="105rem")
+        image(src="/images/logo.png")
       button.navbar-toggler(type="button" data-toggle="collapse" data-target="navbar-text")
         span.navbar-toggler-icon
 
       .collapse.navbar-collapse.h-100.d-flex.justify-content-between#navbar-text 
-        ul.navbar-nav.mr-auto
+        ul.navbar-nav.mr-3
           li.nav-item
             a.nav-link(href="/story/") Trang chủ 
           li.nav-item.dropdown 
             a.nav-link.dropdown-toggle#genreDropdown(role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Thể loại
             .dropdown-menu#genre-menu(aria-labelledby="genreDropdown")
               a.dropdown-item(href="/") All
-        form.form-inline.my-2.my-lg-0(action="/story/search" method="get")
-          input.form-control.mr-sm-2(type="search" placeholder="Tên truyện" aria-label="Search") 
+        form.form-inline.my-2.my-lg-0.w-50(action="/story/search" method="get")
+          .demo-section.k-content.w-75
+            input#story-name-search.form-control.mr-sm-2.w-100(name="story_name" type="search" aria-label="Search")
+            .demo-hint 
           button.btn.btn-outline-success.my-2.my-sm-0(type="submit")
             span.fas.fa-search
         if user
-          .navbar-nav.ml-auto.mr-2
+          .navbar-nav.ml-2.mr-2
             .nav-item.dropdown
               a.nav-link.dropdown-toggle#accountDropdown(role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static") 
                 span.fa-2x.fas.fa-user.mr-2
@@ -46,30 +55,34 @@ html
                 if isAdmin 
                   a.dropdown-item(href="/story/upload") 
                     span.fa-2x.fas.fa-upload.mr-2
-                    h5.d-inline Upload story
+                    h5.d-inline Đăng tải truyện
                   a.dropdown-item(href="/genre/manage") 
                     span.fa-2x.fas.fa-th.mr-2
-                    h5.d-inline Manage  
+                    h5.d-inline Quản lý thể loại truyện  
+                  a.dropdown-item(href="/story/manage") 
+                    span.fa-2x.fas.fa-th.mr-2
+                    h5.d-inline Quản lý danh sách truyện                    
                 else 
                   a.dropdown-item 
                     span.fa-2x.fas.fa-id-badge.mr-2
-                    h5.d-inline Profile
+                    h5.d-inline Hồ sơ
                   a.dropdown-item 
                     span.fa-2x.fas.fa-star.mr-2
-                    h5.d-inline Favourite list
+                    h5.d-inline Danh sách yêu thích
                   a.dropdown-item  
                     span.fa-2x.fas.fa-history.mr-2
-                    h5.d-inline Reading history
+                    h5.d-inline Lịch sử đọc
                   
                 .dropdown-divider
                 form.form-inline(action="/users/logout" method="post")
                   button.dropdown-item(type="submit")
                     span.fa-2x.fas.fa-sign-out-alt.mr-2
-                    h5.d-inline Log out
+                    h5.d-inline Đăng xuất
         else 
-          ul.navbar-nav.ml-auto
+          ul.navbar-nav.ml-2
             li.nav-item.mr-2
-              a.nav-link.btn.btn-outline-primary(href="/users/login") Login 
+              a.nav-link.btn.btn-outline-primary(href="/users/login") Đăng nhập  
             li.nav-item.mr-2
-              a.nav-link.btn.btn-outline-secondary(href="/users/signup") Signup 
+              a.nav-link.btn.btn-outline-secondary(href="/users/signup") Đăng ký
+         
     block content

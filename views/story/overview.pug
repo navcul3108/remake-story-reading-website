@@ -12,24 +12,24 @@ block content
             tr 
               td <h4>Tên truyện</h4>
               td
-                h2.text-primary= story_info.name
+                h2.m-auto.text-primary= story_info.name
             tr 
               td <h4>Thể loại</h4> 
               td 
-                h2
+                h2.m-auto
                   span.badge.badge-danger= story_info.genre_name
             tr 
               td <h4>Tác giả</h4> 
               td
-                h3.text-secondary= story_info.author
+                h3.m-auto.text-secondary= story_info.author
             tr 
               td <h4>Số chương</h4> 
               td
-                h4.text-info= story_info.num_chapters
+                h4.m-auto.text-info= story_info.num_chapters
             tr 
               td <h4>Mô tả</h4>
               td 
-                p= story_info.description
+                p.m-auto= story_info.description
 
     .list-chapters
       h2.text-info.mb-2 Danh sách chương truyện 

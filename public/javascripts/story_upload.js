@@ -1,3 +1,4 @@
+let description = "";
 $(document).ready(function(){
     var form = $("#uploadForm").kendoForm({
         items: [
@@ -25,7 +26,7 @@ $(document).ready(function(){
                     }
                 ]
             },
-            {field: "description", label: "Description", editor: "Editor", attributes: {autocomplete: true}},
+            {field: "description", label: "Description", editor: "Editor", attributes: {autocomplete: true, encoded: false}},
             {field: "num_chapters", label: "Number of chapters", validation: {required: true}, attributes: {style: "width: 30%", type:"number", min: 1, max: 20, placeholder: 1, onchange: "changeNumberChapters()"}},
             {field: "num_pages", label: "Number of pages", validation: {required: true}, attributes: {style: "width: 30%", type:"number", min: 1, placeholder: 1, onchange: "setLimitPageNumber()"}},                    
             {
@@ -37,11 +38,14 @@ $(document).ready(function(){
         ]
     });
 
-    form.bind("submit", (e)=>{        
+
+    form.bind("submit", (e)=>{   
+        $("#uploadForm textarea").val(description);     
         return validateFormInput();
     });
 
     form.bind("change", (ev)=>{
+        description = $("#uploadForm iframe.k-content").contents().find("body").text();
         $("#upload-error").text("");
     }
 )

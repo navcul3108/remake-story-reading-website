@@ -26,20 +26,20 @@ var upload = multer({storage: storage});
 router.get('/', async (req, res)=> {
   const genre_id = req.params.genre_id;
   const list_story = await storyQuery.listStory(genre_id);
-  const num_buckets = Math.floor(list_story.length / 4) +1;
+  const num_buckets = Math.ceil(list_story.length / 4);
   const chunk_size = 4;
   let buckets = [];
   for(var i=0;i<num_buckets;i++){
-    if((i+1)*chunk_size<list_story.length-1){
-      buckets.push(list_story.slice(i*chunk_size, (i+1)*chunk_size-1));
+    if((i+1)*chunk_size<list_story.length){
+      buckets.push(list_story.slice(i*chunk_size, (i+1)*chunk_size));
     }
     else
       buckets.push(list_story.slice(i*chunk_size));
   }
-  console.log(buckets);
   res.render('story/index', { title: 'Express', buckets: buckets });
 });
 
+/* Overview page */
 router.get("/overview",async (req, res)=>{
   const story_id = req.query.id;
   if(story_id.length!==36){
@@ -54,6 +54,7 @@ router.get("/overview",async (req, res)=>{
   }  
 })
 
+/** Reading page */
 router.get("/read",async (req, res)=>{
   const id = req.query.id;
   const index = parseInt(req.query.index);
@@ -137,4 +138,17 @@ router.get("/overview/:id", async (req, res)=>{
     res.render("story/overview", {info: storyInformation});
 })
 
+router.get("/all-name",async (req, res)=>{
+  //console.log(req.query.filter.filters);
+  const list_name = await storyQuery.getAllStoryName();
+  res.status(200).json(list_name);
+})
+
+router.get("/search", async(req, res)=>{
+  const id = await storyQuery.findStoryIdByName(req.query.story_name);
+  if(id==null)
+    res.status(404).render("error", {message: "Không tồn tại truyên mà bạn đang tìm kiếm!"});
+  else
+    res.redirect(`/story/overview?id=${id}`);
+})
 module.exports = router;
