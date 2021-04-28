@@ -26,9 +26,13 @@ async function removeIncompleteStory(story_id){
  * @param {number} [current_index=0]
  * @param {string} story_id: id of story
  */
-function splitPDFRecursively(pdf, story_id, chapters, num_pages, current_index = 0) {
+function splitPDFRecursively(file_path, pdf, story_id, chapters, num_pages, current_index = 0) {
     if (current_index >= chapters.length) {
         pdf.cleanup();
+        if(fs.existsSync(path.resolve(file_path))){
+            fs.unlinkSync(path.resolve(file_path));
+            console.log("deleted temporary file "+file_path);    
+        }
     }
     else {
         chapter = chapters[current_index];
@@ -42,7 +46,7 @@ function splitPDFRecursively(pdf, story_id, chapters, num_pages, current_index =
             .pipe(fs.createWriteStream(`./public/${chapter.file_name}`))
             .on("finish", () => {
                 console.log(`Successfully!`);
-                splitPDFRecursively(pdf, story_id, chapters, num_pages, current_index+1);
+                splitPDFRecursively(file_path, pdf, story_id, chapters, num_pages, current_index+1);
             })
             .on("error", (err) => {
                 console.log("Error when splitting pdf: " + err.message);
@@ -51,6 +55,7 @@ function splitPDFRecursively(pdf, story_id, chapters, num_pages, current_index =
                     fs.unlinkSync(chapters[temp_idx].file_name)
                     temp_idx ++;
                 }
+                fs.unlinkSync(path.resolve(file_path));
                 removeIncompleteStory(story_id);
             });
 
@@ -69,7 +74,7 @@ async function splitStoryIntoChapters(filePath, id, genreId, chapters) {
     const num_chapters = chapters.length;
     const num_pages = await pdf.getNumPages();
     try {
-        splitPDFRecursively(pdf, id, chapters, num_pages);
+        splitPDFRecursively(filePath, pdf, id, chapters, num_pages);
     }
     catch (err) {
         console.log(err.message);
@@ -129,7 +134,7 @@ async function listStory(genre_id) {
         [rows, _] = await conn.query("Select id, name, author, image_path, genre_id, rating From story");
     }
     else {
-        [rows, _] = await conn.query("Select id, name, author, image_path, genre_id, rating From story where id = ?", [genre_id]);
+        [rows, _] = await conn.query("Select id, name, author, image_path, genre_id, rating From story where genre_id = ?", [genre_id]);
     }
     await conn.end();
     let result = [];
@@ -231,11 +236,33 @@ async function findStoryIdByName(name) {
         return null;
 }
 
+async function updateStory(story_id, name, author, description){
+    const conn = await mysql.createConnection(connConfig);
+    await conn.execute("Call update_story(?, ?, ?, ?)", [story_id, name, author, description]);
+    await conn.end();
+}
+
+async function deleteStory(story_id){
+    const conn = await mysql.createConnection(connConfig);
+    await conn.execute("Call delete_story(?)", [story_id]);
+    await conn.end();
+}
+
+async function getAllStory(){
+    const conn = await mysql.createConnection(connConfig);
+    const [rows, fields] = await conn.query("Select id, `name`, author, `description` from story");
+    await conn.end();
+    return rows;
+}
+
 module.exports = {
     createStory: createStory,
     getStoryInformation: getStoryInformation,
     listStory: listStory,
     getChapterInformation: getChapterInformation,
     getAllStoryName: getAllStoryName,
-    findStoryIdByName: findStoryIdByName
+    findStoryIdByName: findStoryIdByName,
+    updateStory: updateStory,
+    deleteStory: deleteStory,
+    getAllStory: getAllStory
 }

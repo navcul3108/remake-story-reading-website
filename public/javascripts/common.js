@@ -1,7 +1,7 @@
 $("#navbar-text").ready(function(){
     $.get("/genre/all", function(data){
         data.forEach((genre, _)=>{
-            $("#genre-menu").append(`<a class="dropdown-item" href="/story?genreId=${genre.id}" title="${genre.description}">${genre.name}</a>`)
+            $("#genre-menu").append(`<a class="dropdown-item" href="/story?genre_id=${genre.id}" title="${genre.description}">${genre.name}</a>`)
         })
     })
 })
@@ -9,7 +9,7 @@ $("#navbar-text").ready(function(){
 $(document).ready(()=>{
     $("#story-name-search").kendoAutoComplete({
         dataSource: {
-            type: "json",
+            dataType: "json",
             transport: {
                 read: "/story/all-name"
             },

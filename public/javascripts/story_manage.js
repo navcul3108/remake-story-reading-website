@@ -1,83 +1,102 @@
-$(document).ready(function () {
-    $("#genreGrid").kendoGrid({
+$(document).ready(()=>{
+    $("#storyGrid").kendoGrid({
         columns: [
             {
                 field: "id",
-                title: "Index",
-                editable: false
+                title: "Mã truyện",
+                editable: false,
+                width: "10%"
             },
             {
                 field: "name",
-                title: "Name"
+                title: "Têm truyện",
+                width: "20%"
+            },
+            {
+                field: "author",
+                title: "Tác giả",
+                width: "15%"
             },
             {
                 field: "description",
-                title: "Description"
+                title: "Mô tả",
+                width: "50%"
             },
-            { 
+            {  
+                title: "Cập nhật",
                 command: [
                     {
                         name: "update",
                         click: function(e){
-                            const tr = $(e.target).closest("tr");
-                            const data = this.dataItem(tr);
-                            if(data.id){
+                            if(confirm("Bạn có muốn cập nhật truyện này?")){
+                                const tr = $(e.target).closest("tr");
+                                const data = this.dataItem(tr);
                                 $.ajax({
                                     type: "post",
-                                    url: "/genre/update",
+                                    url: "/story/update",
                                     dataType: "json",
                                     contentType: "application/json",
                                     data: JSON.stringify({
                                         id: data.id,
                                         name: data.name,
+                                        author: data.author,
                                         description: data.description
                                     }),
                                     success: (data) => {
                                         console.log(data);
                                         alert(data);
-                                        $("#genreGrid").data("kendoGrid").dataSource.read();
+                                        $("#genreGrid").data("kendoGrid").refresh();
                                     },
                                     error: (err) => {
                                         console.log(err);
                                         alert(err);
                                     }
-                                })    
+                                })
                             }
                             else{
-                                $.ajax({
-                                    type: "post",
-                                    url: "/genre/create",
-                                    dataType: "json",
-                                    contentType: "application/json",
-                                    data: JSON.stringify({
-                                        name: data.name,
-                                        description: data.description
-                                    }),
-                                    success: (data) => {
-                                        console.log(data);
-                                        alert(data);
-                                        $("#genreGrid").data("kendoGrid").dataSource.read();
-                                    },
-                                    error: (err) => {
-                                        console.log(err);
-                                        alert(err);
-                                    }
-                                })    
+                                $("#genreGrid").data("kendoGrid").refresh();
                             }
                         }
                     },
-                    "destroy"
-                ] 
-            }],
+                    {
+                        name: "Delete",
+                        click: function(e){
+                            if(confirm("Bạn muốn xóa truyện này?")){
+                                const tr = $(e.target).closest("tr");
+                                const data = this.dataItem(tr);
+                                $.ajax({
+                                    type: "post",
+                                    url: "/story/delete",
+                                    dataType: "json",
+                                    contentType: "application/json",
+                                    data: JSON.stringify({
+                                        id: data.id
+                                    }),
+                                    success: (data) => {
+                                        console.log(data);
+                                        alert(data);
+                                        $("#genreGrid").data("kendoGrid").refresh();
+                                    },
+                                    error: (err) => {
+                                        console.log(err);
+                                        alert(err);
+                                    }
+                                })   
+                            }
+                            else{
+                                $("#genreGrid").data("kendoGrid").refresh();
+                            }
+                        }
+                    }
+                ],
+                width: "10%"
+            }
+        ],
         dataSource: {
             transport: {
                 read: {
-                    url: "/genre/all",
+                    url: "/story/all-story",
                     dataType: "json"
-                },
-                create: {
-                    url: "/genre/create",
-                    type: "POST"
                 }
             },
             schema: {
@@ -92,6 +111,10 @@ $(document).ready(function () {
                             type: "string",
                             editable: true
                         },
+                        author: {
+                            type: "string",
+                            editable: true
+                        },
                         description: {
                             type: "string",
                             editable: true
@@ -100,43 +123,12 @@ $(document).ready(function () {
                 }
             }
         },
-        toolbar: ["create"],
-        pageSize: 20,
-        scrollable: false,
         editable: true,
+        scrollable: true,
         batch: false,
-        pageable:{
+        pageable: {
             pageSize: 10,
             refresh: true
         }
-    });
-    $("table").addClass("table table-striped");
-    $("thead").addClass("thead-dark");
-})
-
-$(".k-popup-edit-form").ready(function(){
-    console.log('Form is ready');
-    $(".k-grid-update .k-i-check").click(function () {
-        console.log($("#genreGrid").data("kendoGrid"));
-        $.ajax({
-            type: "POST",
-            url: "/genre/update",
-            dataType: "json",
-            data: JSON.stringify({
-                id: $(".k-no-editor").text(),
-                name: $("input#name").val(),
-                description: $("input#description").val()
-            }),
-            success: (data) => {
-                console.log(data);
-                alert(data);
-                $("#genreGrid").data("kendoGrid").dataSource.read();
-            },
-            error: (err) => {
-                console.log(err);
-                alert(err);
-            }
-        })
     })
 })
-

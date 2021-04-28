@@ -27,7 +27,7 @@ $(document).ready(function(){
                 ]
             },
             {field: "description", label: "Description", editor: "Editor", attributes: {autocomplete: true, encoded: false}},
-            {field: "num_chapters", label: "Number of chapters", validation: {required: true}, attributes: {style: "width: 30%", type:"number", min: 1, max: 20, placeholder: 1, onchange: "changeNumberChapters()"}},
+            {field: "num_chapters", label: "Number of chapters", validation: {required: true}, attributes: {style: "width: 30%", type:"number", min: 1, max: 50, placeholder: 1, onchange: "changeNumberChapters()"}},
             {field: "num_pages", label: "Number of pages", validation: {required: true}, attributes: {style: "width: 30%", type:"number", min: 1, placeholder: 1, onchange: "setLimitPageNumber()"}},                    
             {
                 type: "group",

@@ -1,3 +1,44 @@
-const {decodeEntity, decode} = require("html-entities");
+const mysql = require("mysql2/promise");
+require("dotenv").config();
+const fs = require("fs");
 
-console.log(decodeEntity(decode("Qu&amp;yacute; r&amp;ograve;m, Tiểu Long v&amp;agrave; nhỏ Hạnh được gia đinh cho đi nghỉ m&amp;aacute;t ở Vũng T&amp;agrave;u một tuần. Ngay buổi s&amp;aacute;ng đầu ti&amp;ecirc;n, ba người bạn nhỏ của ch&amp;uacute;ng ta đ&amp;atilde; hoảng v&amp;iacute;a khi ph&amp;aacute;t hiện tr&amp;ecirc;n v&amp;aacute;ch ch&amp;ugrave;a Phật nằm những c&amp;acirc;u thơ kỳ b&amp;iacute; đầy hăm doạ. Ai viết ra những c&amp;acirc;u thơ đ&amp;oacute;? Với mục đ&amp;iacute;ch g&amp;igrave;? Bằng những suy luận th&amp;ocirc;ng minh, c&amp;aacute;c bạn nhỏ dần dần lần ra dấu vết.", {level: "html5"}), {level: "html5"}))
+const connConfig = {
+    host: "localhost",
+    user: process.env.databaseUser,
+    password: process.env.databasePassword,
+    database: process.env.databaseName
+};
+
+async function populateData(){
+    let sqlContent = "Use story_reading_website";
+    const conn = await mysql.createConnection(connConfig);
+    let [rows, fields] = await conn.query("Select * from account");
+    for(row of rows)
+        sqlContent += `Insert into \`account\`(email, password, last_name, first_name) values ("${row.email}", "${row.password}", "${row.last_name}", "${row.first_name}")\n`
+    sqlContent += "\n";
+
+    [rows, fields] = await conn.query("Select * from role");
+    for(row of rows)
+        sqlContent += `Insert into role(email, role) values ("${row.email}", "${row.role}")\n`
+    sqlContent += "\n";
+            
+    [rows, fields] = await conn.query("Select * from genre");
+    for(row of rows)
+        sqlContent += `Insert into genre(id, \`name\`, \`description\`) values ("${row.id}", "${row.name}", "${row.description}")\n`;
+    sqlContent += "\n";
+
+    [rows, fields] = await conn.query("Select * from story");
+    for(row of rows)
+        sqlContent += `Insert into story(id, \`name\`, \`description\`, author, upload_time, last_modified, image_path, num_chapters, num_pages, rating, genre_id) values ("${row.id}", "${row.name}", '${row.description}', "${row.author}", "${row.upload_time}", "${row.last_modified}", "${row.image_path}", ${row.num_chapters}, ${row.num_pages}, ${row.rating}, ${row.genre_id})\n`;
+    sqlContent += "\n";
+
+    [rows, fields] = await conn.query("Select * from story_chapter");
+    for(row of rows)
+        sqlContent += `Insert into story_chapter(story_id, title, \`index\`, file_name, start_page, end_page) values ("${row.story_id}", "${row.title}", ${row.index}, ${row.start_page}, ${row.end_page})\n`;
+
+    fs.writeFileSync("./SQL-query/populate_data.sql", sqlContent, {encoding: "utf-8"});
+}
+
+populateData().finally(()=>{
+    console.log("Success");
+})

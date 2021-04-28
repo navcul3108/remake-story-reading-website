@@ -24,7 +24,7 @@ var upload = multer({storage: storage});
 
 /* GET home page. */
 router.get('/', async (req, res)=> {
-  const genre_id = req.params.genre_id;
+  const genre_id = req.query.genre_id;
   const list_story = await storyQuery.listStory(genre_id);
   const num_buckets = Math.ceil(list_story.length / 4);
   const chunk_size = 4;
@@ -89,19 +89,6 @@ router.post("/upload", upload.fields([{name:"file",maxCount:1}, {name:"coverImag
   let coverImage = req.files.coverImage[0];
   let chapters = [];
 
-  fs.readdir("./public/temporFiles", (err, files) => {
-    if (err) throw err;
-  
-    for (const file of files) {
-      if(!file.includes(storyFile.filename) && !file.includes(coverImage.filename)){
-        fs.unlink(path.join(path.resolve("./public/temporFiles/"), file), err => {
-          if (err) throw err;
-        });  
-      }
-    }
-  });
-
-
   for(var i=1;i<=numChapters;i++)
   {
     chapters.push({
@@ -117,14 +104,14 @@ router.post("/upload", upload.fields([{name:"file",maxCount:1}, {name:"coverImag
   const successFlag = await storyQuery.createStory(id, body.name, body.author, body.description, `/images/cover/${id}.${format}`, body.num_chapters,
                                                    body.genre, body.num_pages, chapters, "./"+storyFile.path);
   if(successFlag){
-    res.render("success", {message: "You have upload story successfully!"});
+    res.render("success", {message: "Đăng tải truyện thành công!"});
     if(!fs.existsSync("./public/images/cover/"))
       fs.mkdirSync("./public/images/cover/")
 
     fs.copyFileSync(coverImage.path, `./public/images/cover/${id}.${format}`);
   }
   else
-    res.render("error", {message: "There is an error while processing story uploading, please try again!"});
+    res.render("error", {message: "Có lỗi xảy ra trong quá trình đăng tải, vui lòng nhập đúng thông tin và thử lại"});
   fs.rmSync(coverImage.path);
 })
 
@@ -150,5 +137,64 @@ router.get("/search", async(req, res)=>{
     res.status(404).render("error", {message: "Không tồn tại truyên mà bạn đang tìm kiếm!"});
   else
     res.redirect(`/story/overview?id=${id}`);
+})
+
+router.get("/manage", (req, res)=>{
+  if(req.session.isAdmin)
+    res.render("story/manage");
+  else
+    res.render("error", {message: "Bạn không phải Admin!"});
+  
+})
+
+router.get("/all-story",async (req, res)=>{
+  if(req.session.isAdmin)
+    res.status(200).json(await storyQuery.getAllStory());
+  else
+    res.status(404).json("Bạn không phải admin");
+})
+
+router.post("/update", async(req, res)=>{
+  if(req.session.isAdmin){
+    const {body} = req;
+    const story_id = body.id;
+    const name = body.name;
+    const author = body.author;
+    const description = body.description;
+    await storyQuery.updateStory(story_id, name, author, description);
+    res.status(200).json("Cập nhật thành công!");
+  }
+  else
+    res.status(500).json("Bạn không phải Admin!");
+})
+
+router.post("/delete",async (req, res)=>{
+  if(req.session.isAdmin){
+    const {body} = req;
+    const story_id = body.id;
+    const story_info = await storyQuery.getStoryInformation(story_id);
+    if(story_info==null)
+      res.status(404).json("Không tìm thấy truyện!");
+    else{
+      // Delete story inside database
+      await storyQuery.deleteStory(story_id);
+      // Delete cover image
+      if(fs.existsSync(path.resolve("./public"+story_info.image_path)))
+        fs.unlinkSync(path.resolve("./public"+story_info.image_path));
+      // Delete chapter file
+      fs.readdir(`./public/pdf/${story_info.genre_id}`, (err, files)=>{
+        if(err) throw err;
+
+        for(file of files){
+          if(file.includes(story_id))
+            fs.unlinkSync(path.join(`./public/pdf/${story_info.genre_id}/`, file));
+        }
+      })
+
+      res.status(200).json("Xóa thành công!");  
+    }
+  }
+  else
+    res.status(500).json("Bạn không phải Admin!");
 })
 module.exports = router;
