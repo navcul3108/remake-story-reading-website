@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("#genreGrid").kendoGrid({
+    $("#genre-grid").kendoGrid({
         columns: [
             {
                 field: "id",
@@ -35,7 +35,8 @@ $(document).ready(function () {
                                     success: (data) => {
                                         console.log(data);
                                         alert(data);
-                                        $("#genreGrid").data("kendoGrid").dataSource.read();
+                                        $("#genre-grid").data("kendoGrid").dataSource.read();
+                                        $("#kendro-grid").data("kendorGrid").refresh();
                                     },
                                     error: (err) => {
                                         console.log(err);
@@ -56,7 +57,8 @@ $(document).ready(function () {
                                     success: (data) => {
                                         console.log(data);
                                         alert(data);
-                                        $("#genreGrid").data("kendoGrid").dataSource.read();
+                                        $("#genre-grid").data("kendoGrid").dataSource.read();
+                                        $("#kendro-grid").data("kendorGrid").refresh();
                                     },
                                     error: (err) => {
                                         console.log(err);
@@ -66,18 +68,17 @@ $(document).ready(function () {
                             }
                         }
                     },
-                    "destroy"
+                    "destroy"                    
                 ] 
             }],
         dataSource: {
             transport: {
                 read: {
                     url: "/genre/all",
-                    dataType: "json"
-                },
-                create: {
-                    url: "/genre/create",
-                    type: "POST"
+                    dataType: "json",
+                    complete: (data, status)=>{
+                        $(".k-grid-delete").remove();
+                    }
                 }
             },
             schema: {
@@ -112,12 +113,17 @@ $(document).ready(function () {
     });
     $("table").addClass("table table-striped");
     $("thead").addClass("thead-dark");
+    console.log($("#genre-grid a.k-grid-add"));
+})
+
+$("#genre-grid a.k-grid-add").click(()=>{
+    console.log("Table changed!");
+    $(".k-grid-delete").remove();
 })
 
 $(".k-popup-edit-form").ready(function(){
-    console.log('Form is ready');
     $(".k-grid-update .k-i-check").click(function () {
-        console.log($("#genreGrid").data("kendoGrid"));
+        console.log($("#genre-grid").data("kendoGrid"));
         $.ajax({
             type: "POST",
             url: "/genre/update",
@@ -130,7 +136,8 @@ $(".k-popup-edit-form").ready(function(){
             success: (data) => {
                 console.log(data);
                 alert(data);
-                $("#genreGrid").data("kendoGrid").dataSource.read();
+                $("#genre-grid").data("kendoGrid").dataSource.read();
+                $("#genre-grid").data("kendoGrid").refresh();
             },
             error: (err) => {
                 console.log(err);

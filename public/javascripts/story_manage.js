@@ -20,7 +20,7 @@ $(document).ready(()=>{
             {
                 field: "description",
                 title: "Mô tả",
-                width: "50%"
+                width: "40%"
             },
             {  
                 title: "Cập nhật",
@@ -89,7 +89,7 @@ $(document).ready(()=>{
                         }
                     }
                 ],
-                width: "10%"
+                width: "20%"
             }
         ],
         dataSource: {
@@ -123,6 +123,7 @@ $(document).ready(()=>{
                 }
             }
         },
+        toolbar: ["search"],
         editable: true,
         scrollable: true,
         batch: false,

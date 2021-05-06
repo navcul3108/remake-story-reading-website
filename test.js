@@ -12,33 +12,15 @@ const connConfig = {
 async function populateData(){
     let sqlContent = "Use story_reading_website";
     const conn = await mysql.createConnection(connConfig);
-    let [rows, fields] = await conn.query("Select * from account");
-    for(row of rows)
-        sqlContent += `Insert into \`account\`(email, password, last_name, first_name) values ("${row.email}", "${row.password}", "${row.last_name}", "${row.first_name}")\n`
-    sqlContent += "\n";
+    let [rows, fields] = await conn.query("Select email from account");
+    for(row of rows){
+        let rate = Math.ceil(Math.random()*5) ;  
+        await conn.execute("Insert into rating(story_id, email, rate) Values(?, ?, ?)", ["2563d480-a76f-11eb-9cad-272a2cc7219a", row.email, rate]);
+    }
 
-    [rows, fields] = await conn.query("Select * from role");
-    for(row of rows)
-        sqlContent += `Insert into role(email, role) values ("${row.email}", "${row.role}")\n`
-    sqlContent += "\n";
-            
-    [rows, fields] = await conn.query("Select * from genre");
-    for(row of rows)
-        sqlContent += `Insert into genre(id, \`name\`, \`description\`) values ("${row.id}", "${row.name}", "${row.description}")\n`;
-    sqlContent += "\n";
-
-    [rows, fields] = await conn.query("Select * from story");
-    for(row of rows)
-        sqlContent += `Insert into story(id, \`name\`, \`description\`, author, upload_time, last_modified, image_path, num_chapters, num_pages, rating, genre_id) values ("${row.id}", "${row.name}", '${row.description}', "${row.author}", "${row.upload_time}", "${row.last_modified}", "${row.image_path}", ${row.num_chapters}, ${row.num_pages}, ${row.rating}, ${row.genre_id})\n`;
-    sqlContent += "\n";
-
-    [rows, fields] = await conn.query("Select * from story_chapter");
-    for(row of rows)
-        sqlContent += `Insert into story_chapter(story_id, title, \`index\`, file_name, start_page, end_page) values ("${row.story_id}", "${row.title}", ${row.index}, ${row.start_page}, ${row.end_page})\n`;
-
-    fs.writeFileSync("./SQL-query/populate_data.sql", sqlContent, {encoding: "utf-8"});
+    await conn.end();
 }
 
-populateData().finally(()=>{
-    console.log("Success");
-})
+var arr = [{a: 1},{a:2},{a:3}];
+var sum = arr.reduce((pre, cur)=>pre+=cur.a, 0);
+console.log(sum);

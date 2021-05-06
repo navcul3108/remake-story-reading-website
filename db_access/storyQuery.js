@@ -170,6 +170,15 @@ async function getStoryInformation(id, return_chapters = false) {
             genre_name: row.genre_name,
             genre_description: row.genre_description
         };
+
+        // Get rating information
+        let [rows3, fields3] = await conn.query("Select rate, count(*) as 'num_rates' from rating where story_id=? group by rate order by rate desc;", [id]);
+        let sum = rows3.reduce((pre, cur)=> pre+=cur.num_rates, 0);
+        let rating_info = {};
+        for(rate_info of rows3)
+            rating_info[rate_info.rate] = {percent: 100*rate_info.num_rates/sum, num_rates: rate_info.num_rates}
+        story_info.rating_info = rating_info;
+
         if (return_chapters) {
             const [rows2, fields2] = await conn.query("Select * from story_chapter where story_id=? order by `index` asc", [id]);
             let chapters = rows2.map((row, idx) => {
@@ -255,6 +264,29 @@ async function getAllStory(){
     return rows;
 }
 
+async function rateStory(story_id, email, rating){
+    if(1<= rating && rating<=5){
+        const conn = await mysql.createConnection(connConfig);
+        try{
+            await conn.execute("Insert into rating(story_id, email, rate) values(?, ?, ?)", [story_id, email, rating]);
+            return true;
+        }
+        catch(e){
+            await conn.rollback();
+            console.log("Error while rating story: ", e);
+            return false;
+        }
+    }
+    return false;
+}
+
+async function checkUserReviewedStory(email, story_id){
+    const conn = await mysql.createConnection(connConfig);
+    const [rows, fields] = await conn.query("Select * from rating where email=? and story_id = ?", [email, story_id]);
+    await conn.end();
+    return rows.length>0;
+}
+
 module.exports = {
     createStory: createStory,
     getStoryInformation: getStoryInformation,
@@ -264,5 +296,7 @@ module.exports = {
     findStoryIdByName: findStoryIdByName,
     updateStory: updateStory,
     deleteStory: deleteStory,
-    getAllStory: getAllStory
+    getAllStory: getAllStory,
+    rateStory: rateStory,
+    checkUserReviewedStory: checkUserReviewedStory
 }

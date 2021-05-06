@@ -75,15 +75,17 @@ select * from story_chapter;
 --     foreign key(email) references `account`(email)
 -- );
 
--- Create table if not exists rating(
--- 	story_id			varchar(36),
---     rate				integer,
--- 	email				nvarchar(50),
---     
---     primary key(story_id, email),
---     foreign key(story_id) references story(id),
---     foreign key(email) references `account`(email)
--- );
+Drop table rating;
+Create table if not exists rating(
+	story_id			varchar(36),
+    rate				integer,
+	email				nvarchar(50),
+    
+    check (rate>=1 and rate<=5),
+    primary key(story_id, email),
+    foreign key(story_id) references story(id),
+    foreign key(email) references `account`(email)
+);
 
 -- Create table if not exists `comment`(
 -- 	story_id			varchar(36),

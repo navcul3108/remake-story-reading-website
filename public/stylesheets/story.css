@@ -22,6 +22,43 @@
     object-fit: fill;
 }
 
-.list-chapters>table .first{
+.overview-table tr td:nth-child(1){
+    width: 25%;
+}
+
+.overview-table tr td:nth-child(2){
+    width: 75%;
+}
+
+
+.story-info .rating-percent{
+    margin: 0 5px;
+    min-height: 10px;
+    height: 100%;
+    background-color: #54666d;
+    position: relative;
+}
+
+.story-info .rating-percent span{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: rgb(14, 173, 212);
+}
+
+.rating-table tr>td:nth-child(1){
+    width: 30%;
+}
+
+.rating-table tr>td:nth-child(2){
+    width: 60%;
+}
+
+.rating-table tr>td:nth-child(3){
+    width: 10%;
+}
+
+.list-chapters table tr td:nth-child(1){
     width: 90%;
 }

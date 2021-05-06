@@ -1,13 +1,16 @@
+
 extends ../layout.pug
 
 block content 
+  -var index = {1: 0,2: 0,3: 0,4: 0,5: 0}
   link(rel="stylesheet", href="/stylesheets/story.css")
   .story-info
+    //Overview region
     #story-overview.border.border-primary
       .story-image
         img(src=`${story_info.image_path}` alt="Image not found!")
       .story-info
-        table.table 
+        table.table.overview-table 
           tbody 
             tr 
               td <h4>Tên truyện</h4>
@@ -30,7 +33,28 @@ block content
               td <h4>Mô tả</h4>
               td 
                 p.m-auto= story_info.description
-
+            tr
+              td <h4>Đánh giá</h4>
+              td 
+                table.table.rating-table 
+                  tbody
+                    each rate in [5,4,3,2,1] 
+                      tr
+                        td 
+                          while index[rate]<rate
+                            span(style="color: gold;").fas.fa-star
+                            a(hidden)= index[rate]++
+                        if story_info.rating_info[rate]
+                          td
+                            .rating-percent 
+                              span(style=`width: ${story_info.rating_info[rate].percent}%;`) 
+                          td= story_info.rating_info[rate].num_rates
+                        else 
+                          td
+                            .rating-percent 
+                              span(style=`width: 0%;`) 
+                          td 0
+    // List chapters
     .list-chapters
       h2.text-info.mb-2 Danh sách chương truyện 
       table.table.table-striped.border.border-secondary
@@ -43,6 +67,37 @@ block content
               td.first
                 a(href=`${chapter.link}`)= chapter.title
               td.text-center= chapter.num_page
+    // Reading button
     .d-flex.justify-content-center.mt-2 
       a.btn.btn-success.m-2(href=`${story_info.chapters[0].link}`) Đọc chương đầu 
       a.btn.btn-info.m-2(href=`${story_info.chapters[story_info.num_chapters-1].link}`) Đọc chương cuối
+    // Rating
+    if user && !reviewed
+      .d-flex.justify-content-center.mt-5.mb-5.rating-form 
+        form(action="/story/rate", method="post") 
+          .demo-section.k-content 
+            h4.mb-2 Đánh giá truyện này 
+            input#rating(name="rating").mr-5
+            input(hidden name="email" value=`${user}`)
+            input(hidden name="story_id" value=`${story_info.id}`)
+            button.btn.btn-danger Đánh giá
+      script.
+        const rate_tooltip = {
+          1: "Không hay",
+          2: "Tạm được",
+          3: "Bình thường",
+          4: "Khá hay",
+          5: "Yêu thích"
+        }
+        $(document).ready(()=>{
+          $("#rating").kendoRating();
+
+          var rating = $("#rating").getKendoRating();
+
+          rating.wrapper.kendoTooltip({
+              filter: ".k-rating-item",
+              content: function (e) {
+                  return rate_tooltip[e.target.data("title")];
+              }
+          });
+        })

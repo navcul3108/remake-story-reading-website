@@ -5,6 +5,7 @@ const uuid = require("uuid");
 const fs = require("fs");
 const storyQuery = require('../db_access/storyQuery');
 const path = require("path");
+const { assert } = require('console');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb)=>{
@@ -49,8 +50,14 @@ router.get("/overview",async (req, res)=>{
     const story_info = await storyQuery.getStoryInformation(story_id, true);
     if(story_info==null)
       res.render("error", {message: "Liên kết không tồn tại"});
-    else
-      res.render("story/overview", {story_info: story_info});
+    else{
+      let reviewed = false;
+      if(req.session.user)
+      {
+        reviewed = await storyQuery.checkUserReviewedStory(req.session.user, story_id)
+      }
+      res.render("story/overview", {story_info: story_info, reviewed: reviewed});
+    }
   }  
 })
 
@@ -196,5 +203,19 @@ router.post("/delete",async (req, res)=>{
   }
   else
     res.status(500).json("Bạn không phải Admin!");
+})
+
+router.post("/rate",async (req, res)=>{
+  const {body} = req;
+  const {email, story_id, rating} = body;
+  if(email==null || story_id==null || rating==null)
+    res.render("error", {message: "Yêu cầu không hợp lệ"});
+  else{
+    const isSuccess = await storyQuery.rateStory(story_id, email, rating);
+    if(isSuccess)
+      res.redirect(req.originalUrl);
+    else
+      res.render("error", {message: "Có lỗi xảy ra trong quá trình xử lý"});  
+  }
 })
 module.exports = router;
