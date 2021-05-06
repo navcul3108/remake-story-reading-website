@@ -11,3 +11,33 @@ a {
 .dropdown a{
   cursor: pointer;
 }
+
+.success-screen{
+  display: flex;
+  flex-direction: column;
+  min-height: 35em;
+  height: 100%;
+  width: 100%;
+  background-image: url("../images/success.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: fill;
+  color: #759B61;
+}
+
+.failure-screen{
+  display: flex;
+  flex-direction: column;
+  min-height: 35em;
+  height: 100%;
+  width: 100%;
+  background-image: url("../images/failed.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: fill;
+  color: #759B61;
+}
+
+.k-filter-row th, .k-grid-header th.k-header{
+  font-size: 18px;
+}

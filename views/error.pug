@@ -1,8 +1,9 @@
 extends layout
 
 block content
-  .d-flex.justify-content-center.align-items-center.mt-4
-    h2.text-center.text-danger= message
-  if error
-    h2= error.status
-    pre #{error.stack}
+  .failure-screen
+    .d-flex.justify-content-center.align-items-center.mt-4
+      h2.text-center.text-danger= message
+    if error
+      h2= error.status
+      pre #{error.stack}

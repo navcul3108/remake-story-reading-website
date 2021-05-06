@@ -2,15 +2,9 @@ $(document).ready(()=>{
     $("#storyGrid").kendoGrid({
         columns: [
             {
-                field: "id",
-                title: "Mã truyện",
-                editable: false,
-                width: "10%"
-            },
-            {
                 field: "name",
-                title: "Têm truyện",
-                width: "20%"
+                title: "Tên truyện",
+                width: "25%"
             },
             {
                 field: "author",

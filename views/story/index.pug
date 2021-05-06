@@ -17,6 +17,7 @@ block content
       padding: 0.75em;
       border: 1px solid #51c4d3;
       border-radius: 1em;
+      max-height: 30em;
     }
 
     .story-card>img{
@@ -29,11 +30,15 @@ block content
       border-top: 3px solid #126e82;
       padding: 0.5rem;
     }
+
+    .list-story{
+      min-height: 35em;
+    }
   div 
     h1.text-center.text-info Danh sách truyện
   .container
     each bucket in buckets 
-      .row.d-flex.justify-content-left
+      .row.d-flex.justify-content-left.list-story
         each story in bucket
           .col-md-3
             .card.story-card

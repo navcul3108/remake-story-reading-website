@@ -2,17 +2,14 @@ $(document).ready(function () {
     $("#genre-grid").kendoGrid({
         columns: [
             {
-                field: "id",
-                title: "Index",
-                editable: false
-            },
-            {
                 field: "name",
-                title: "Name"
+                title: "Name",
+                width: "20%"
             },
             {
                 field: "description",
-                title: "Description"
+                title: "Description",
+                width: "50%"
             },
             { 
                 command: [
@@ -36,7 +33,7 @@ $(document).ready(function () {
                                         console.log(data);
                                         alert(data);
                                         $("#genre-grid").data("kendoGrid").dataSource.read();
-                                        $("#kendro-grid").data("kendorGrid").refresh();
+                                        $("#genre-grid").data("kendorGrid").refresh();
                                     },
                                     error: (err) => {
                                         console.log(err);
@@ -58,7 +55,7 @@ $(document).ready(function () {
                                         console.log(data);
                                         alert(data);
                                         $("#genre-grid").data("kendoGrid").dataSource.read();
-                                        $("#kendro-grid").data("kendorGrid").refresh();
+                                        $("#genre-grid").data("kendorGrid").refresh();
                                     },
                                     error: (err) => {
                                         console.log(err);
@@ -69,7 +66,8 @@ $(document).ready(function () {
                         }
                     },
                     "destroy"                    
-                ] 
+                ],
+                width: "30%" 
             }],
         dataSource: {
             transport: {
@@ -78,6 +76,10 @@ $(document).ready(function () {
                     dataType: "json",
                     complete: (data, status)=>{
                         $(".k-grid-delete").remove();
+                        $("#genre-grid a.k-grid-add").click(()=>{
+                            console.log("Table changed!");
+                            $(".k-grid-delete").remove();
+                        })
                     }
                 }
             },
@@ -113,12 +115,6 @@ $(document).ready(function () {
     });
     $("table").addClass("table table-striped");
     $("thead").addClass("thead-dark");
-    console.log($("#genre-grid a.k-grid-add"));
-})
-
-$("#genre-grid a.k-grid-add").click(()=>{
-    console.log("Table changed!");
-    $(".k-grid-delete").remove();
 })
 
 $(".k-popup-edit-form").ready(function(){
