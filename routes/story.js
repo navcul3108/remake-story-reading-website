@@ -5,11 +5,9 @@ const uuid = require("uuid");
 const fs = require("fs");
 const storyQuery = require('../db_access/storyQuery');
 const path = require("path");
-const { assert } = require('console');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb)=>{
-    const {body} = req;
     const folderDir = `./public/temporFiles/`;
     if(!fs.existsSync(folderDir))
       fs.mkdirSync(folderDir);
@@ -172,7 +170,7 @@ router.post("/update", async(req, res)=>{
     res.status(200).json("Cập nhật thành công!");
   }
   else
-    res.status(500).json("Bạn không phải Admin!");
+    res.status(400).json("Bạn không phải Admin!");
 })
 
 router.post("/delete",async (req, res)=>{
@@ -202,7 +200,7 @@ router.post("/delete",async (req, res)=>{
     }
   }
   else
-    res.status(500).json("Bạn không phải Admin!");
+    res.status(400).json("Bạn không phải Admin!");
 })
 
 router.post("/rate",async (req, res)=>{

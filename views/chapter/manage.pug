@@ -1,0 +1,28 @@
+extends ../layout.pug
+
+block content 
+  #chapter-manage 
+    .w-50.m-auto
+      h2.text-info.text-center.mb-5 Quản lý chương truyện
+      input#story_id(hidden value=`${story_info.id}`)
+    #chapter-grid
+    .modal.fade#insert-form-modal(tabindex="-1", role="diaglog")    
+      .modal-dialog.modal-dialog-centered(role="document")
+        .modal-content 
+          .modal-header 
+            h4.modal-title Cập nhật chương mới 
+          .modal-body
+            form(action="/chapter/insert", method="post", enctype="multipart/form-data")
+              input(hidden, name="story_id", value=`${story_info.id}`)
+              input(hidden, name="genre_id", value=`${story_info.genre_id}`)
+              input(hidden, name="num_chapters", value=`${story_info.num_chapters}`)
+              .form-group
+                label Nhập tên chương
+                input.form-control(type="text", name="title")
+              .form-group 
+                label File pdf cho chương này 
+                input.form-control(type="file", accept=".pdf", name="chapter_file")
+              .modal-footer
+                button.btn.btn-primary(type="submit") Cập nhật
+                button.btn.btn-secondary(data-dismiss="modal" type="button") Hủy bỏ
+    script(src="/javascripts/chapter_manage.js") 

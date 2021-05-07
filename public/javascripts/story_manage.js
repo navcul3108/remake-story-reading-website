@@ -81,6 +81,15 @@ $(document).ready(()=>{
                                 $("#genreGrid").data("kendoGrid").refresh();
                             }
                         }
+                    },
+                    {
+                        name: "Cập nhật chương",
+                        click: function(e){
+                            const tr = $(e.target).closest("tr");
+                            console.log(tr);
+                            const data = this.dataItem(tr);
+                            window.location.href = `/chapter/manage?story_id=${data.id}`;
+                        }
                     }
                 ],
                 width: "20%"

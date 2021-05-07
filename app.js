@@ -8,6 +8,7 @@ const session = require("express-session");
 const storyRouter = require('./routes/story');
 const usersRouter = require('./routes/users');
 const genreRouter = require("./routes/genre");
+const chapterRouter = require("./routes/chapter");
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use(function(req, res, next) {
 app.use('/story', storyRouter);
 app.use('/users', usersRouter);
 app.use("/genre", genreRouter);
+app.use("/chapter", chapterRouter);
 
 app.get("/", (req, res)=>{
   res.redirect("story/");

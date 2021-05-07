@@ -62,7 +62,7 @@ Select * from `account`;
 Select * from genre;
 Select * from story;
 select * from story_chapter;
-
+Select max(`index`)+1 from story_chapter where story_id = "2563d480-a76f-11eb-9cad-272a2cc7219a";
 
 -- Create Table If Not Exists reading_history(
 -- 	story_id			varchar(36),
@@ -86,6 +86,7 @@ Create table if not exists rating(
     foreign key(story_id) references story(id),
     foreign key(email) references `account`(email)
 );
+Select * from rating;
 
 -- Create table if not exists `comment`(
 -- 	story_id			varchar(36),

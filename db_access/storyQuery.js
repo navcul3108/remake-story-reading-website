@@ -180,18 +180,7 @@ async function getStoryInformation(id, return_chapters = false) {
         story_info.rating_info = rating_info;
 
         if (return_chapters) {
-            const [rows2, fields2] = await conn.query("Select * from story_chapter where story_id=? order by `index` asc", [id]);
-            let chapters = rows2.map((row, idx) => {
-                return {
-                    index: row.index,
-                    title: row.title,
-                    link: `/story/read?id=${id}&index=${row.index}`,
-                    start_page: row.start_page,
-                    end_page: row.end_page,
-                    num_page: row.end_page - row.start_page + 1
-                }
-            });
-            story_info["chapters"] = chapters;
+            story_info["chapters"] = await getAllChapters(id);
         }
         await conn.end();
         return story_info;
@@ -200,6 +189,23 @@ async function getStoryInformation(id, return_chapters = false) {
         await conn.end();
         return null;
     }
+}
+
+async function getAllChapters(story_id){
+    const conn = await mysql.createConnection(connConfig);    
+    const [rows, fields] = await conn.query("Select * from story_chapter where story_id=? order by `index` asc", [story_id]);
+    let chapters = rows.map((row, idx) => {
+        return {
+            index: row.index,
+            title: row.title,
+            link: `/story/read?id=${story_id}&index=${row.index}`,
+            start_page: row.start_page,
+            end_page: row.end_page,
+            num_page: row.end_page - row.start_page + 1
+        }
+    });
+    await conn.end();
+    return chapters;
 }
 
 async function getChapterInformation(id, index) {
@@ -298,5 +304,6 @@ module.exports = {
     deleteStory: deleteStory,
     getAllStory: getAllStory,
     rateStory: rateStory,
-    checkUserReviewedStory: checkUserReviewedStory
+    checkUserReviewedStory: checkUserReviewedStory,
+    getAllChapters: getAllChapters
 }
