@@ -8,14 +8,14 @@ block content
             else if type && type=="success"
                 a.text-success=message
             .form-group
-                h3.text-white Login form
+                h3.text-white Đăng nhập
             .form-group 
                 label(for="userEmail") Email 
                 input.form-control(type="email" id="userEmail" aria-describedby="Your email" name="email")
             .form-group 
                 label(for="userPassword") Password 
                 input.form-control(type="password" id="userPassword" placeholder="Your password" name="password")
-            .form-group
-                a.link(href="/users/signup") Does not have an account. Register now!
-            button.btn.btn-primary(type="submit") Login
-                
+            .d-flex.justify-content-center
+                button.btn.btn-success(type="submit") Login
+            .form-group.mt-2
+                a.link(href="/users/signup") Chưa có tài khoản? Đăng ký ngay!

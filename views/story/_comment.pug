@@ -1,0 +1,74 @@
+// comment format
+// [
+//     {
+//         story_id: "",
+//         email: "",
+//         post_time: "date string",
+//         conent: "string",
+//         replies: [
+//             {
+//                 email: "",
+//                 post_time: "",
+//                 content: ""
+//             }
+//         ]
+//     }
+// ]
+.modal(tabindex='-1' role='dialog')#notify-modal
+  .modal-dialog(role='document')
+    .modal-content
+      .modal-header
+        h5.modal-title Thông báo
+        button.close(type='button' data-dismiss='modal' aria-label='Close')
+          span(aria-hidden='true') &times;
+      .modal-body
+        p#modal-content
+      .modal-footer
+        button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+.container.mb-5.mt-5
+  .card
+    .row
+      .col-md-12
+        h3.text-center.mb-5.text-primary Bình luận
+        .row
+          .col-md-12#comment-list
+            each comment in comments
+              .media.mt-3
+                img.mr-3.rounded-circle(alt = 'User avatar' src='https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png')
+                .media-body
+                  .row
+                    .col-8.d-flex
+                      h5= comment.email
+                      span.ml-2.text-secondary= comment.post_time
+                    if email
+                      .col-4
+                        .pull-right.reply
+                          a.reply(href='#')
+                            span
+                              i.fa.fa-reply
+                            | Reply                            
+                  | #{comment.content}
+                  each reply in comment.replies
+                    .media.mt-4
+                      a.pr-3(href='#')
+                        img.rounded-circle(alt='Bootstrap Media Another Preview' src='https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png')
+                      .media-body
+                        .row
+                          .col-12.d-flex
+                            h5= reply.email
+                            span.ml-2.text-secondary= reply.post_time
+                        | #{reply.content}
+            // If user have logged in, they can comment about this story
+        if email
+          .row
+            .col-md-12.comment-box
+              textarea#comment-box(name="comment-box", cols="30", rows="2", @keyup.enter="postComment()")  
+              button.mt-3.float-right#post-comment Bình luận
+        else
+          .d-flex.justify-content-center.mt-4 
+            i.fa.fa-2x.fa-info.text-warning.mr-2
+            h3.text-danger Bạn cần đăng nhập để có thể bình luận
+          .d-flex.justify-content-center.mt-2 
+            a.btn.btn-success(href="/users/login") Đăng nhập ngay
+              i.ml-2.fa.fa-arrow-right.text-white   
+script(src="/javascripts/story_comment.js")               

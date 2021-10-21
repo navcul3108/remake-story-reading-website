@@ -3,9 +3,9 @@ body{
 }
 
 a.link{
-    color: blue;
+    color: #ffcdb2;
     text-decoration: underline;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Roboto', sans-serif;;
 }
 
 #users-form{
@@ -15,7 +15,7 @@ a.link{
 }
 
 #users-form>form{
-    background-color: rgba(35, 232, 229, 0.7);
+    background-color: rgba(72, 149, 239, 0.7);
 }
 #users-form>form label{
     color: whitesmoke;

@@ -1,37 +1,36 @@
-#story-overview, .list-chapters{
+#story-overview, .list-chapters {
     margin-left: 10%;
     margin-right: 10%;
     margin-top: 3em;
 }
 
-#story-overview{
+#story-overview {
     display: flex;
     justify-items: first baseline;
     padding: 1em;
 }
 
-.story-image{
+.story-image {
     min-width: 25%;
     min-height: 40%;
     margin-right: 5em;
 }
 
-.story-image>img{
+.story-image>img {
     width: 100%;
     height: auto;
     object-fit: fill;
 }
 
-.overview-table tr td:nth-child(1){
+.overview-table tr td:nth-child(1) {
     width: 25%;
 }
 
-.overview-table tr td:nth-child(2){
+.overview-table tr td:nth-child(2) {
     width: 75%;
 }
 
-
-.story-info .rating-percent{
+.story-info .rating-percent {
     margin: 0 5px;
     min-height: 10px;
     height: 100%;
@@ -39,7 +38,7 @@
     position: relative;
 }
 
-.story-info .rating-percent span{
+.story-info .rating-percent span {
     position: absolute;
     left: 0;
     top: 0;
@@ -47,18 +46,75 @@
     background: rgb(14, 173, 212);
 }
 
-.rating-table tr>td:nth-child(1){
+.rating-table tr>td:nth-child(1) {
     width: 30%;
 }
 
-.rating-table tr>td:nth-child(2){
+.rating-table tr>td:nth-child(2) {
     width: 60%;
 }
 
-.rating-table tr>td:nth-child(3){
+.rating-table tr>td:nth-child(3) {
     width: 10%;
 }
 
-.list-chapters table tr td:nth-child(1){
+.list-chapters table tr td:nth-child(1) {
     width: 90%;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #d2d2dc;
+    border-radius: 11px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgb(249, 249, 250);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(212, 182, 212, 1);
+    box-shadow: 0px 0px 5px 0px rgb(161, 163, 164)
+}
+
+.media img {
+    width: 60px;
+    height: 60px
+}
+
+.reply a {
+    text-decoration: none
+}
+
+.comment-box {
+    display: block;
+	transition: all 1s;
+}
+
+.comment-box>textarea {
+    width: 100%;
+    border: none;
+    background: #E8E8E8;
+    padding: 5px 10px;
+    height: 50%;
+    border-radius: 5px 5px 0px 0px;
+    border-bottom: 2px solid #016BA8;
+    transition: all 0.5s;
+    margin-top: 15px;
+}
+
+.comment-box>button {
+    background: #016ba8;
+    color: #fff;
+    padding: 10px 10px;
+    border: none;
+    margin-top: 0px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
+    transition: 1s all;
+    font-size: 10px;
+    border-radius: 5px;
 }

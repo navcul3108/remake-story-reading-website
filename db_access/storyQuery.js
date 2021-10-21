@@ -5,12 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const { exception } = require("console");
 
-const connConfig = {
-    host: "localhost",
-    user: process.env.databaseUser,
-    password: process.env.databasePassword,
-    database: process.env.databaseName
-};
+const connConfig = require("./dbConfig").connConfig
 
 async function removeIncompleteStory(story_id){
     const conn = await mysql.createConnection(connConfig);

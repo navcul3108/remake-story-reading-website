@@ -2,12 +2,7 @@ const mysql = require("mysql2/promise");
 const { stringify } = require("uuid");
 require("dotenv").config();
 
-const connConfig = {
-    host: "localhost",
-    user: process.env.databaseUser,
-    password: process.env.databasePassword,
-    database: process.env.databaseName
-};
+const connConfig = require("./dbConfig").connConfig
 
 async function updateTitleOfChapter(story_id, index, new_title){
     const conn = await mysql.createConnection(connConfig);

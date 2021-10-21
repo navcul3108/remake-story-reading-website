@@ -9,6 +9,8 @@ const storyRouter = require('./routes/story');
 const usersRouter = require('./routes/users');
 const genreRouter = require("./routes/genre");
 const chapterRouter = require("./routes/chapter");
+const commentRouter = require("./routes/comment")
+const { writeLocalData } = require("./routes/utils")
 
 var app = express();
 
@@ -22,40 +24,38 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret: 'rVtPiVabab',
-    resave: true,
-    saveUninitialized: false
-  }));
+	secret: 'rVtPiVabab',
+	resave: true,
+	saveUninitialized: false
+}));
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  if(req.session.user){
-    res.locals.user=req.session.user;
-    res.locals.lastName = req.session.lastName;
-    res.locals.isAdmin = req.session.isAdmin;
-  }
-  next();
-  //next(createError(404));
-});
+// Write session data into used by Pug view engine
+app.use(writeLocalData);
 
+// Router handler
 app.use('/story', storyRouter);
 app.use('/users', usersRouter);
 app.use("/genre", genreRouter);
 app.use("/chapter", chapterRouter);
+app.use("/comment", commentRouter);
 
-app.get("/", (req, res)=>{
-  res.redirect("story/");
+app.get("/", (req, res) => {
+	res.redirect("story/");
 })
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res, next) {
+	if(err){
+		// set locals, only providing error in development
+		res.locals.message = err.message;
+		res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+		// render the error page
+		res.status(err.status || 500);
+		res.render('error');
+	}
+	else
+		next()
 });
 
 module.exports = app;

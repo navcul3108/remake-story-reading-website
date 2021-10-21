@@ -6,6 +6,7 @@ block content
   link(rel="stylesheet", href="/stylesheets/story.css")
   .story-info
     //Overview region
+    p(hidden id="story-id-store")= story_info.id
     #story-overview.border.border-primary
       .story-image
         img(src=`${story_info.image_path}` alt="Image not found!")
@@ -71,21 +72,23 @@ block content
     .d-flex.justify-content-center.mt-2 
       a.btn.btn-success.m-2(href=`${story_info.chapters[0].link}`) Đọc chương đầu 
       a.btn.btn-info.m-2(href=`${story_info.chapters[story_info.num_chapters-1].link}`) Đọc chương cuối
-    // Rating
-    if user && !reviewed
+    // Comment
+    include _comment
+    // Rating script
+    if email && !reviewed
       .d-flex.justify-content-center.mt-5.mb-5.rating-form 
         form(action="/story/rate", method="post") 
           .demo-section.k-content 
             h4.mb-2 Đánh giá truyện này 
             input#rating(name="rating").mr-5
             input(hidden name="email" value=`${user}`)
-            input(hidden name="story_id" value=`${story_info.id}`)
+            input(hidden name="story_id" value=)
             button.btn.btn-danger Đánh giá
       script.
         const rate_tooltip = {
           1: "Không hay",
-          2: "Tạm được",
-          3: "Bình thường",
+          2: "Bình thường",
+          3: "Tạm được",
           4: "Khá hay",
           5: "Yêu thích"
         }
