@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {authenticateAJAX, authenticate} = require("./utils")
+const {authenticateAJAX} = require("./utils")
 const {postComment, replyComment} = require("../db_access/commentQuery")
 
 // AJAX API
@@ -19,12 +19,12 @@ router.post("/post", authenticateAJAX, async (req, res)=>{
 })
 
 router.post("/reply", authenticateAJAX, async (req, res)=>{
-    const {story_id, comment_index_string, content} = req.params;
-    const comment_index = parseInt(comment_index_string);
-    if(!content || !story_id || !comment_index)
+    let {story_id, comment_index, content} = req.body;
+    if(content==null || story_id==null || comment_index==null)
         res.status(500).json({message: "Có lỗi xảy ra!"});
     else{
-        const email = req.session.email.email;
+        comment_index = parseInt(comment_index);
+        const email = req.session.email;
         let result = await replyComment(story_id, email, comment_index, content);
         if(!result)
             res.status(400).json({message: "Không thể trả lời bình luận!"});

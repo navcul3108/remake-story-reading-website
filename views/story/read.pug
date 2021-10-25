@@ -1,5 +1,8 @@
 extends ../layout.pug
 
+block title 
+  title= "Đọc truyện"
+
 block content
   #chapter-reading 
     h2.text-center.text-primary.m-3= `${chapter_info.story_name}-${chapter_info.title}`

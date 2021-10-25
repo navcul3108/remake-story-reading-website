@@ -1,10 +1,7 @@
 doctype html
 html
   head
-    if title
-      title= title
-    else 
-      title= "Web đọc truyện"
+    block title
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/bootstrap/bootstrap.min.css')
     link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Nunito")

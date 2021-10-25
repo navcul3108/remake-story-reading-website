@@ -145,13 +145,13 @@ async function listStory(genre_id) {
     return result;
 }
 
-async function getStoryInformation(id, return_chapters = false) {
+async function getStoryInformation(story_id, return_chapters = false) {
     const conn = await mysql.createConnection(connConfig);
-    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating, genre_name, genre_description From story_and_genre_view where id = ?", [id])
+    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating, genre_name, genre_description From story_and_genre_view where id = ?", [story_id])
     if (rows.length == 1) {
         const row = rows[0];
         let story_info = {
-            id: id,
+            id: story_id,
             name: row.name,
             description: row.description,
             author: row.author,
@@ -167,15 +167,20 @@ async function getStoryInformation(id, return_chapters = false) {
         };
 
         // Get rating information
-        let [rows3, fields3] = await conn.query("Select rate, count(*) as 'num_rates' from rating where story_id=? group by rate order by rate desc;", [id]);
+        let [rows3, fields3] = await conn.query("Select rate, count(*) as 'num_rates' from rating where story_id=? group by rate order by rate desc;", [story_id]);
         let sum = rows3.reduce((pre, cur)=> pre+=cur.num_rates, 0);
         let rating_info = {};
         for(rate_info of rows3)
             rating_info[rate_info.rate] = {percent: 100*rate_info.num_rates/sum, num_rates: rate_info.num_rates}
         story_info.rating_info = rating_info;
+        let [rows4, fields4] = await conn.query("Select avg_rating from average_rating where story_id=?", [story_id]);
+        if(rows4.length==0)
+            story_info.avg_rating = "0.0";
+        else
+            story_info.avg_rating = rows4[0].avg_rating.toString().slice(0, 3);
 
         if (return_chapters) {
-            story_info["chapters"] = await getAllChapters(id);
+            story_info["chapters"] = await getAllChapters(story_id);
         }
         await conn.end();
         return story_info;

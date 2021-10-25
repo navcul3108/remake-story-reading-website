@@ -25,6 +25,7 @@
         p#modal-content
       .modal-footer
         button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+-var counter= 0
 .container.mb-5.mt-5
   .card
     .row
@@ -43,27 +44,34 @@
                     if email
                       .col-4
                         .pull-right.reply
-                          a.reply(href='#')
-                            span
-                              i.fa.fa-reply
+                          button.btn.btn-success.btn-sm.reply(onclick=`createReplyBox(this, ${counter++})`)
+                            span.mr-1
+                              i.fa.fa-reply.text-primary
                             | Reply                            
                   | #{comment.content}
-                  each reply in comment.replies
-                    .media.mt-4
-                      a.pr-3(href='#')
-                        img.rounded-circle(alt='Bootstrap Media Another Preview' src='https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png')
-                      .media-body
-                        .row
-                          .col-12.d-flex
-                            h5= reply.email
-                            span.ml-2.text-secondary= reply.post_time
-                        | #{reply.content}
+                  p(hidden )
+                  .reply-region
+                    each reply in comment.replies
+                      .media.mt-4
+                        a.pr-3(href='#')
+                          img.rounded-circle(alt='User avatar' src='https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png')
+                        .media-body
+                          .row
+                            .col-12.d-flex
+                              h5= reply.email
+                              span.ml-2.text-secondary= reply.post_time
+                          | #{reply.content}
+        if email
+          .row#reply-box(hidden)
+            .col-md-12.reply-box.mb-2
+              textarea#reply-box-input(name="comment-box", cols="30", rows="1")  
+              button.mt-3.float-right#reply-comment-btn Phản hồi          
             // If user have logged in, they can comment about this story
         if email
           .row
             .col-md-12.comment-box
-              textarea#comment-box(name="comment-box", cols="30", rows="2", @keyup.enter="postComment()")  
-              button.mt-3.float-right#post-comment Bình luận
+              textarea#comment-box-input(name="comment-box", cols="30", rows="2")  
+              button.mt-3.float-right#post-comment-btn Bình luận
         else
           .d-flex.justify-content-center.mt-4 
             i.fa.fa-2x.fa-info.text-warning.mr-2

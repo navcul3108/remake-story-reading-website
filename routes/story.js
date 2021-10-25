@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
 		else
 			buckets.push(list_story.slice(i * chunk_size));
 	}
-	res.render('story/index', { title: 'Express', buckets: buckets });
+	res.render('story/index', { title: 'Web đọc truyện', buckets: buckets });
 });
 
 /* Overview page */

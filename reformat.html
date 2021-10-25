@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Web đọc truyện</title>
+    <title></title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Nunito">
@@ -307,7 +307,7 @@
                     <div class="col-md-12">
                         <h3 class="text-center mb-5 text-primary">Bình luận</h3>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="comment-list">
                                 <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
                                         src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png">
                                     <div class="media-body">
@@ -317,20 +317,27 @@
                                                     4:50:02 PM</span>
                                             </div>
                                             <div class="col-4">
-                                                <div class="pull-right reply"><a class="reply" href="#"><span><i
-                                                                class="fa fa-reply"></i></span>Reply </a></div>
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 0)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
                                             </div>
-                                        </div>Hay<div class="media mt-4"><a class="pr-3" href="#"><img
-                                                    class="rounded-circle" alt="Bootstrap Media Another Preview"
-                                                    src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png"></a>
-                                            <div class="media-body">
-                                                <div class="row">
-                                                    <div class="col-12 d-flex">
-                                                        <h5>tran123@gmail.com</h5><span
-                                                            class="ml-2 text-secondary">10/19/2021, 9:15:50 AM</span>
-                                                    </div>
-                                                </div>Đồng quan điểm với bạn, Nguyễn Nhật Ánh luôn là nguồn cảm hứng cho
-                                                chúng ta trở về tuổi thơ
+                                        </div>Hay<p hidden></p>
+                                        <div class="reply-region">
+                                            <div class="media mt-4"><a class="pr-3" href="#"><img class="rounded-circle"
+                                                        alt="User avatar"
+                                                        src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png"></a>
+                                                <div class="media-body">
+                                                    <div class="row">
+                                                        <div class="col-12 d-flex">
+                                                            <h5>tran123@gmail.com</h5><span
+                                                                class="ml-2 text-secondary">10/19/2021, 9:15:50
+                                                                AM</span>
+                                                        </div>
+                                                    </div>Đồng quan điểm với bạn, Nguyễn Nhật Ánh luôn là nguồn cảm hứng
+                                                    cho chúng ta trở về tuổi thơ
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -344,10 +351,14 @@
                                                     4:50:10 PM</span>
                                             </div>
                                             <div class="col-4">
-                                                <div class="pull-right reply"><a class="reply" href="#"><span><i
-                                                                class="fa fa-reply"></i></span>Reply </a></div>
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 1)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
                                             </div>
-                                        </div>Tuyet
+                                        </div>Tuyet<p hidden></p>
+                                        <div class="reply-region"></div>
                                     </div>
                                 </div>
                                 <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
@@ -359,10 +370,14 @@
                                                     4:47:02 PM</span>
                                             </div>
                                             <div class="col-4">
-                                                <div class="pull-right reply"><a class="reply" href="#"><span><i
-                                                                class="fa fa-reply"></i></span>Reply </a></div>
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 2)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
                                             </div>
-                                        </div>Truyen hay lam
+                                        </div>Truyen hay lam<p hidden></p>
+                                        <div class="reply-region"></div>
                                     </div>
                                 </div>
                                 <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
@@ -374,10 +389,14 @@
                                                     4:48:58 PM</span>
                                             </div>
                                             <div class="col-4">
-                                                <div class="pull-right reply"><a class="reply" href="#"><span><i
-                                                                class="fa fa-reply"></i></span>Reply </a></div>
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 3)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
                                             </div>
-                                        </div>Truyen hay lam
+                                        </div>Truyen hay lam<p hidden></p>
+                                        <div class="reply-region"></div>
                                     </div>
                                 </div>
                                 <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
@@ -389,10 +408,14 @@
                                                     4:49:09 PM</span>
                                             </div>
                                             <div class="col-4">
-                                                <div class="pull-right reply"><a class="reply" href="#"><span><i
-                                                                class="fa fa-reply"></i></span>Reply </a></div>
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 4)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
                                             </div>
-                                        </div>Truyen hay lam
+                                        </div>Truyen hay lam<p hidden></p>
+                                        <div class="reply-region"></div>
                                     </div>
                                 </div>
                                 <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
@@ -404,18 +427,85 @@
                                                     4:49:23 PM</span>
                                             </div>
                                             <div class="col-4">
-                                                <div class="pull-right reply"><a class="reply" href="#"><span><i
-                                                                class="fa fa-reply"></i></span>Reply </a></div>
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 5)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
                                             </div>
-                                        </div>Truyen hay lam
+                                        </div>Truyen hay lam<p hidden></p>
+                                        <div class="reply-region"></div>
                                     </div>
-                                </div><!-- If user have logged in, they can comment about this story-->
+                                </div>
+                                <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
+                                        src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png">
+                                    <div class="media-body">
+                                        <div class="row">
+                                            <div class="col-8 d-flex">
+                                                <h5>tran123@gmail.com</h5><span class="ml-2 text-secondary">10/21/2021,
+                                                    9:59:20 AM</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 6)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
+                                            </div>
+                                        </div> Truyen hay<p hidden></p>
+                                        <div class="reply-region"></div>
+                                    </div>
+                                </div>
+                                <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
+                                        src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png">
+                                    <div class="media-body">
+                                        <div class="row">
+                                            <div class="col-8 d-flex">
+                                                <h5>tran123@gmail.com</h5><span class="ml-2 text-secondary">10/21/2021,
+                                                    10:17:49 AM</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 7)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
+                                            </div>
+                                        </div> Truyen hay<p hidden></p>
+                                        <div class="reply-region"></div>
+                                    </div>
+                                </div>
+                                <div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar"
+                                        src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png">
+                                    <div class="media-body">
+                                        <div class="row">
+                                            <div class="col-8 d-flex">
+                                                <h5>tran123@gmail.com</h5><span class="ml-2 text-secondary">10/21/2021,
+                                                    10:18:02 AM</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="pull-right reply"><button
+                                                        class="btn btn-success btn-sm reply"
+                                                        onclick="createReplyBox(this, 8)"><span class="mr-1"><i
+                                                                class="fa fa-reply text-primary"></i></span>Reply
+                                                    </button></div>
+                                            </div>
+                                        </div>Toi rất thich truyện này<p hidden></p>
+                                        <div class="reply-region"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="row" id="reply-box" hidden>
+                            <div class="col-md-12 reply-box mb-2"><textarea id="reply-box-input" name="comment-box"
+                                    cols="30" rows="1"> </textarea><button class="mt-3 float-right"
+                                    id="reply-comment-btn">Phản hồi </button></div>
+                            <!-- If user have logged in, they can comment about this story-->
+                        </div>
                         <div class="row">
-                            <div class="col-md-12 comment-box"><textarea id="comment-box" name="comment-box" cols="30"
-                                    rows="2" @keyup.enter="postComment()"> </textarea><button class="mt-3 float-right"
-                                    id="post-comment">Bình luận</button></div>
+                            <div class="col-md-12 comment-box"><textarea id="comment-box-input" name="comment-box"
+                                    cols="30" rows="2"> </textarea><button class="mt-3 float-right"
+                                    id="post-comment-btn">Bình luận</button></div>
                         </div>
                     </div>
                 </div>
