@@ -5,23 +5,30 @@ const {isLoggedIn} = require("./utils")
 
 /* GET users listing. */
 router.get('/login', isLoggedIn, function (req, res) {
-	res.render('users/login', { title: "Login page" });
+	if(req.params.needRedirect!=="0")
+		res.render('users/login', {originUrl: req.headers.referer });
+	else
+		res.render('users/login');
 });
 
 router.post("/login", async (req, res) => {
 	const { body } = req;
 	const email = body.email;
 	const password = body.password;
+	const originalUrl = body.originUrl
 
 	const [isValid, isAdmin, lastName] = await userQuery.authenticateAccount(email, password);
 	if (isValid) {
 		req.session.email = email;
 		req.session.isAdmin = isAdmin;
 		req.session.lastName = lastName;
-		res.redirect("/");
+		if(originalUrl && !originalUrl.includes("/users/login"))
+			res.redirect(originalUrl);
+		else
+			res.redirect("/story")
 	}
 	else {
-		res.render("users/login", { title: "Login page", type: "failure", message: "Your email or password is incorrect!Try again" });
+		res.render("users/login", {type: "failure", message: "Tài khoản hoặc mật khẩu không chính xác. Vui lòng thử lại" });
 	}
 })
 
@@ -34,7 +41,7 @@ router.get("/signup", (req, res, next) => {
 })
 
 router.get("/signup", (req, res) => {
-	res.render("users/signup", { title: "Sign up page" });
+	res.render("users/signup");
 })
 
 router.post("/signup", async (req, res) => {
@@ -46,9 +53,9 @@ router.post("/signup", async (req, res) => {
 
 	const isSuccess = await userQuery.createAccount(email, password, firstName, lastName);
 	if (isSuccess)
-		res.render("users/login", { title: "Login page", type: "success", message: "Register successfully!Log in to join with our." });
+		res.render("users/login", {type: "success", message: "Đăng ký thành công. Hãy đăng nhập!" });
 	else
-		res.render("users/signup", { title: "Register page", type: "failure", message: "Email has been used, please try another email.Each email is used for only one account!" });
+		res.render("users/signup", {type: "failure", message: "Email đã được sử dụng. Vui lòng sử dụng email khác" });
 })
 
 router.post("/logout", (req, res) => {
@@ -57,7 +64,7 @@ router.post("/logout", (req, res) => {
 		req.session.isAdmin = null;
 		req.session.lastName = null;
 	}
-	res.redirect("/users/login");
+	res.redirect("/users/login?needRedirect=0");
 })
 
 module.exports = router;

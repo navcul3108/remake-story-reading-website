@@ -6,6 +6,8 @@ block content
     link(rel="stylesheet" href="/stylesheets/users.css")
     .d-flex.flex-row.align-items-center.justify-content-center.w-100.h-100#users-form
         form.p-5.border.rounded.border-secondary.w-50.h-75(action="/users/login", method="post")
+            if originUrl
+                input(name="originUrl" hidden value=`${originUrl}`)
             if type && type=="failure" 
                 a.text-danger= message
             else if type && type=="success"

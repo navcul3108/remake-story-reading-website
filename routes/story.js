@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
 		else
 			buckets.push(list_story.slice(i * chunk_size));
 	}
-	res.render('story/index', { title: 'Web đọc truyện', buckets: buckets });
+	res.render('story/index', {buckets: buckets });
 });
 
 /* Overview page */
@@ -80,7 +80,7 @@ router.use("/upload", (req, res, next) => {
 	if (req.session.isAdmin)
 		return next();
 	else
-		res.render("error", { message: "You are not admin!" });
+		res.render("error", { message: "Bạn không có quyền truy cập trang này" });
 })
 
 router.get("/upload", (req, res) => {
@@ -125,7 +125,7 @@ router.get("/overview/:id", async (req, res) => {
 
 	const storyInformation = await storyQuery.getStoryInformation(id);
 	if (storyInformation == null)
-		res.render("error", { message: "The story that you find is not exists!" });
+		res.render("error", { message: "Truyện bạn tìm kiếm không tồn tại" });
 	else
 		res.render("story/overview", { info: storyInformation });
 })
@@ -211,7 +211,7 @@ router.post("/rate", async (req, res) => {
 	else {
 		const isSuccess = await storyQuery.rateStory(story_id, email, rating);
 		if (isSuccess)
-			res.redirect(req.originalUrl);
+			res.redirect("/story/overview?id="+story_id);
 		else
 			res.render("error", { message: "Có lỗi xảy ra trong quá trình xử lý" });
 	}

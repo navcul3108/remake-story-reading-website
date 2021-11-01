@@ -1,5 +1,6 @@
 function appendPostedComment(email, post_time, content){    
-    let comment = $(`<div class="media mt-3"><img class="mr-3 rounded-circle" alt="User avatar" src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png">
+    let comment = $(`<div class="media mt-3">
+                        <img class="mr-3 rounded-circle" alt="User avatar" src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png">
                         <div class="media-body">
                             <div class="row">
                                 <div class="col-8 d-flex">
@@ -7,11 +8,16 @@ function appendPostedComment(email, post_time, content){
                                     <span class="ml-2 text-secondary">${post_time}</span>
                                 </div>
                                 <div class="col-4">
-                                    <div class="pull-right reply"><a class="reply" href="#"><span><i
-                                                    class="fa fa-reply"></i></span>Reply </a></div>
+                                    <div class="pull-right reply">
+                                        <button class="btn btn-success btn-sm reply" onclick="createReplyBox(this, ${$("button.reply").length})">
+                                            <span><i class="fa fa-reply text-primary"></i></span>
+                                            Reply 
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             ${content}
+                            <div class="reply-region"></div>
                         </div>
                     </div>`)
     $("#comment-list").append($(comment))
@@ -25,8 +31,8 @@ function appendPostedReply(email, post_time, comment_index, content){
         <div class="media-body">
             <div class="row">
                 <div class="col-12 d-flex">
-                    <h5>${email}</h5><span
-                        class="ml-2 text-secondary">${post_time}</span>
+                    <h5>${email}</h5>
+                    <span class="ml-2 text-secondary">${post_time}</span>
                 </div>
             </div>
             ${content}

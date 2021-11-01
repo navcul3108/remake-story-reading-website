@@ -274,6 +274,7 @@ async function rateStory(story_id, email, rating){
     if(1<= rating && rating<=5){
         const conn = await mysql.createConnection(connConfig);
         try{
+            console.log(story_id, email, rating);
             await conn.execute("Insert into rating(story_id, email, rate) values(?, ?, ?)", [story_id, email, rating]);
             return true;
         }
