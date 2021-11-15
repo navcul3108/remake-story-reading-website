@@ -53,7 +53,52 @@ async function authenticateAccount(email, password){
     return [isValid, isAdmin, lastName];
 }
 
+async function getAccountProfile(email){
+    const conn = await mysql.createConnection(connConfig);
+    let [rows, _] = await conn.query("Select first_name, last_name, birthday, avatar_url from account where email=?", [email])
+    await conn.end();
+    if(rows.length===1){
+        return {
+            ...rows[0]
+        }
+    }
+    else
+        throw "Account is not exists";
+}
+
+async function updateProfile(email, firstName, lastName, birthday){
+    const conn = await mysql.createConnection(connConfig);
+    try{
+        let [rows, _] = await conn.execute("Update account Set first_name=?,last_name=?,birthday=? Where email=?", [firstName, lastName, birthday, email]);
+        await conn.end()
+        return rows.affectedRows ===1;    
+    }
+    catch(e)
+    {
+        await conn.end();
+        console.dir(e);
+        return false;
+    }
+}
+
+async function updateAvatar(email, new_avatar_url){
+    const conn = await mysql.createConnection(connConfig);
+    try{
+        let [rows, _] = await conn.execute("Update account Set avatar_url=? Where email=?", [new_avatar_url, email]);
+        await conn.end()
+        return rows.affectedRows ===1;    
+    }
+    catch(e){
+        await conn.end();
+        console.dir(e);
+        return false;
+    }
+}
+
 module.exports={
     createAccount: createAccount,
-    authenticateAccount: authenticateAccount
+    authenticateAccount: authenticateAccount,
+    getAccountProfile,
+    updateProfile,
+    updateAvatar
 }

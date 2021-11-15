@@ -110,6 +110,6 @@ block content
     // Reading button
     .d-flex.justify-content-center.mt-2 
       a.btn.btn-success.m-2(href=`${story_info.chapters[0].link}`) Đọc chương đầu 
-      a.btn.btn-info.m-2(href=`${story_info.chapters[story_info.num_chapters-1].link}`) Đọc chương cuối
+      a.btn.btn-info.m-2(href=`${story_info.chapters[story_info.chapters.length-1].link}`) Đọc chương cuối
     // Comment
     include _comment

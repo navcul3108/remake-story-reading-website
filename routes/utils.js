@@ -1,3 +1,22 @@
+const multer = require("multer");
+const fs = require("fs");
+const uuid = require("uuid");
+
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		const folderDir = `./public/temporFiles/`;
+		if (!fs.existsSync(folderDir))
+			fs.mkdirSync(folderDir);
+		cb(null, folderDir);
+	},
+	filename: (req, file, cb) => {
+		const format = file.originalname.split(".").pop();
+		cb(null, uuid.v1() + "." + format);
+	}
+})
+
+const uploader = multer({ storage: storage });
+
 // Middeware function to check user is loggedin
 function isLoggedIn(req, res, next){
     if(req.session.email){
@@ -30,4 +49,4 @@ function writeLocalData(req, res, next){
     next();
 }
 
-module.exports = {isLoggedIn, authenticate, authenticateAJAX, writeLocalData}
+module.exports = {isLoggedIn, authenticate, authenticateAJAX, writeLocalData, uploader}

@@ -1,0 +1,16 @@
+extends ../layout.pug
+
+block title 
+    title= "Đăng tải truyện"
+
+block content
+    .w-50.m-auto
+        h2.text-info.text-center.mb-5 Upload story
+    .w-50.m-auto.mt-5
+        form(action="/story/upload/each-chapter" method="post" enctype="multipart/form-data")#uploadForm
+            #avatarUpload
+                .form-group
+                    label(for="coverImage") Story cover image
+                    input(type="file" name="coverImage" id="coverImage" aria-label="file")
+            #multi-chapter-upload
+    script(src="/javascripts/story_upload_each_chapter.js")

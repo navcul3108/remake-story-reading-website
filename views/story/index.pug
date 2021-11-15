@@ -49,6 +49,9 @@ block content
               .card-body
                 h5.card-title.text-primary= story.name
                 h5.card-title.text-secondary= story.author
-              .d-flex.justify-content-center.m-0.p-0
+              .d-flex.justify-content-between.m-0.p-0
+                .d-flex.justify-content-center
+                  h2= story.rating
+                  span.ml-2.fa.fa-2x.fa-star.text-warning
                 a.btn.btn-success(href=`/story/overview?id=${story.id}`) Đọc ngay
       

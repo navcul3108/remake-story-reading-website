@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userQuery = require("../db_access/accountQuery.js");
-const {isLoggedIn} = require("./utils")
+const {isLoggedIn, authenticate, uploader} = require("./utils")
+const fs = require("fs")
+const {resolve} = require("path")
 
 /* GET users listing. */
 router.get('/login', isLoggedIn, function (req, res) {
@@ -65,6 +67,49 @@ router.post("/logout", (req, res) => {
 		req.session.lastName = null;
 	}
 	res.redirect("/users/login?needRedirect=0");
+})
+
+router.use("/profile", authenticate)
+
+router.get("/profile", async (req, res)=>{
+	try{
+		let profile = await userQuery.getAccountProfile(req.session.email);
+		res.render("users/profile", {profile})	
+	}
+	catch(e){
+		res.render("error", {message: e})
+	}
+})
+
+router.post("/profile/update-info", async(req, res)=>{
+	const {body} = req;
+	let {firstName, lastName, birthday} = body;
+	console.dir(body);
+	const email = req.session.email;
+	if(firstName==null || lastName==null || birthday==null)
+		res.render("error", {message: "Thông tin không chính xác"});
+	else
+	{
+		if(userQuery.updateProfile(email, firstName, lastName, new Date(birthday)))
+			res.redirect("/users/profile")
+		else
+			res.render("error", {message: "Không thể cập nhật!"})
+	}
+})
+
+router.post("/profile/upload-avatar", uploader.single("avatarImage"), async (req, res)=>{
+	const avatarFile = req.file;
+	const email = req.session.email;
+	const oldPath = req.body.oldPath; 
+	if(await userQuery.updateAvatar(email, "/images/avatar/"+avatarFile.filename)){
+		if(oldPath!=="/images/avatar/default.png")
+			fs.unlink(resolve(oldPath))
+		fs.renameSync(resolve(avatarFile.path), resolve("public/images/avatar/"+avatarFile.filename));
+		res.redirect("/users/profile")
+	}
+	else{
+		res.render("error", {message: "Có lỗi xảy ra trong quá trình xử lý!"});
+	}
 })
 
 module.exports = router;

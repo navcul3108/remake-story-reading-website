@@ -1,0 +1,34 @@
+extends ../layout.pug
+
+block title 
+  title="Hồ sơ"
+
+block content
+  .modal.fade#upload-modal(tabindex="-1", role="diaglog")    
+    .modal-dialog.modal-dialog-centered(role="document")
+      .modal-content 
+        .modal-header 
+          h4.modal-title Cập nhật ảnh đại diện
+          button.close(type="button" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true")|
+            | &times; 
+        .modal-body
+          h4.text-info Thay thế ảnh đại diện cũ
+          #old-avatar 
+            img.m-auto.img-fluid 
+          form(action="/users/profile/upload-avatar" method="post" enctype="multipart/form-data") 
+            input(hidden name="oldPath")
+            .form-group#avatar-upload
+              input(type="file" name="avatarImage" id="avatar-image" aria-label="file")
+            button.float-right(type="submit").btn.btn-success Cập nhật
+  .w-75.m-auto 
+    h2.text-center.text-primary Hồ sơ cá nhân 
+  .w-75.m-auto.mt-4.border.border-primary.p-4.rounded.shadow
+    .row 
+      .col-4
+        #avatar-region
+          img.img-fluid
+      .col-8
+        form(action="/users/profile/update-info" method="post")#profile-form
+
+    script(src="/javascripts/users_profile.js")

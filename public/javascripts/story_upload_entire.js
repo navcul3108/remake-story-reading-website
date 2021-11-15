@@ -1,4 +1,5 @@
-let description = "";
+var description = "";
+
 $(document).ready(function(){
     var form = $("#uploadForm").kendoForm({
         items: [
@@ -13,10 +14,10 @@ $(document).ready(function(){
                         editorOptions: {
                             dataSource: {
                                 transport: {
-                                   read: {
-                                       url: "/genre/all",
-                                       dataType: "json"
-                                   }   
+                                    read: {
+                                        url: "/genre/all",
+                                        dataType: "json"
+                                    }   
                                 }
                             },
                             optionLabel: "Select genre of story...",
@@ -32,7 +33,6 @@ $(document).ready(function(){
             {
                 type: "group",
                 label: "Specify chapter page",
-                attributes: {id: "specifyChapterContainer"},
                 items: []
             }
         ]
@@ -47,8 +47,7 @@ $(document).ready(function(){
     form.bind("change", (ev)=>{
         description = $("#uploadForm iframe.k-content").contents().find("body").text();
         $("#upload-error").text("");
-    }
-)
+    })
 
     $("#uploadForm").append($('<h3 class="text-danger" id="upload-error"></h3>'));
 
@@ -69,7 +68,7 @@ $(document).ready(function(){
             maxFileSize: 1e6
         }
     });
-    $("#coverImage").attr("accept", "image/png,image/jpg,image/jpeg");
+    $("#coverImage").attr("accept", "image/png,image/jpg,image/jpeg");    
 })
 
 function changeNumberChapters(){   
@@ -94,7 +93,6 @@ function changeNumberChapters(){
 }
 
 function setLimitPageNumber(){
-    console.log($("#num_pages").val());
     $('#specified-pages input[type="number"]').attr("max", $("#num_pages").val());
 }
 

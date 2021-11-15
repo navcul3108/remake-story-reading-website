@@ -1,26 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var multer = require("multer");
 const uuid = require("uuid");
 const fs = require("fs");
 const storyQuery = require('../db_access/storyQuery');
 const path = require("path");
-const { getAllStoryComment } = require("../db_access/commentQuery")
-
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		const folderDir = `./public/temporFiles/`;
-		if (!fs.existsSync(folderDir))
-			fs.mkdirSync(folderDir);
-		cb(null, folderDir);
-	},
-	filename: (req, file, cb) => {
-		const format = file.originalname.split(".").pop();
-		cb(null, uuid.v1() + "." + format);
-	}
-})
-
-var upload = multer({ storage: storage });
+const { getAllStoryComment } = require("../db_access/commentQuery");
+const { uploader, authenticate } = require('./utils');
 
 /* GET home page. */
 router.get('/', async (req, res) => {
@@ -83,11 +68,15 @@ router.use("/upload", (req, res, next) => {
 		res.render("error", { message: "Bạn không có quyền truy cập trang này" });
 })
 
-router.get("/upload", (req, res) => {
-	res.render("story/upload");
+router.get("/upload/method", (req, res) => {
+	res.render("story/upload-method");
 })
 
-router.post("/upload", upload.fields([{ name: "file", maxCount: 1 }, { name: "coverImage", maxCount: 1 }]), async (req, res) => {
+router.get("/upload/entire",  (req, res) => {
+	res.render("story/upload-entire");
+})
+
+router.post("/upload/entire", uploader.fields([{ name: "file", maxCount: 1 }, { name: "coverImage", maxCount: 1 }]), async (req, res) => {
 	const id = uuid.v1();
 	let { body } = req;
 	const numChapters = body.num_chapters;
@@ -120,6 +109,48 @@ router.post("/upload", upload.fields([{ name: "file", maxCount: 1 }, { name: "co
 	fs.rmSync(coverImage.path);
 })
 
+router.get("/upload/each-chapter", (req, res) => {
+	res.render("story/upload-each");
+})
+
+router.post("/upload/each-chapter", uploader.fields([{ name: "chapterFiles"}, { name: "coverImage", maxCount: 1 }]),async (req, res)=>{
+	const id = uuid.v1();
+	let { body } = req;
+	let chapterFiles = req.files.chapterFiles.map((val, index)=>val.path);
+	let coverImage = req.files.coverImage[0];
+	let chapters = [];
+
+	for (let i = 1; i <= body.num_chapters; i++) {
+		chapters.push({
+			start_page: 0,
+			end_page: 0,
+			title: body[`chapter_title_${i}`],
+			index: i,
+			file_name: `/pdf/${body.genre}/${id}_${i}.pdf`
+		});
+	}
+	[chapters, body.num_pages] = await storyQuery.extractPDFNumPages(chapterFiles, chapters);
+
+	const format = coverImage.originalname.split(".").pop();
+	const successFlag = await storyQuery.createStory(id, body.name, body.author, body.description, `/images/cover/${id}.${format}`, body.num_chapters,
+	body.genre, body.num_pages, chapters);
+	if (successFlag) {
+		res.render("success", { message: "Đăng tải truyện thành công!" });
+		if (!fs.existsSync("./public/images/cover/"))
+			fs.mkdirSync("./public/images/cover/")
+
+		fs.renameSync(coverImage.path, `./public/images/cover/${id}.${format}`);
+		if(!fs.existsSync(`./public/pdf/${body.genre}`))
+			fs.mkdirSync(`./public/pdf/${body.genre}`)
+		storyQuery.moveTemporaryFilesToPublicFolder(chapterFiles.map((val, _)=>path.resolve(val)), chapters.map((val, _)=>path.resolve("public"+val.file_name)))
+	}
+	else{
+		res.render("error", { message: "Có lỗi xảy ra trong quá trình đăng tải, vui lòng nhập đúng thông tin và thử lại" });
+		for(let filePath of chapterFiles)
+			fs.rmSync(path.resolve(filePath));
+	}
+})
+
 router.get("/overview/:id", async (req, res) => {
 	const id = req.params.id;
 
@@ -144,19 +175,13 @@ router.get("/search", async (req, res) => {
 		res.redirect(`/story/overview?id=${id}`);
 })
 
+/** Management region */
 router.get("/manage", (req, res) => {
 	if (req.session.isAdmin)
 		res.render("story/manage");
 	else
 		res.render("error", { message: "Bạn không phải Admin!" });
 
-})
-
-router.get("/all-story", async (req, res) => {
-	if (req.session.isAdmin)
-		res.status(200).json(await storyQuery.getAllStory());
-	else
-		res.status(404).json("Bạn không phải admin");
 })
 
 router.post("/update", async (req, res) => {
@@ -203,6 +228,13 @@ router.post("/delete", async (req, res) => {
 		res.status(400).json("Bạn không phải Admin!");
 })
 
+router.get("/all-story", async (req, res) => {
+	if (req.session.isAdmin)
+		res.status(200).json(await storyQuery.getAllStory());
+	else
+		res.status(404).json("Bạn không phải admin");
+})
+
 router.post("/rate", async (req, res) => {
 	const { body } = req;
 	const { email, story_id, rating } = body;
@@ -215,5 +247,11 @@ router.post("/rate", async (req, res) => {
 		else
 			res.render("error", { message: "Có lỗi xảy ra trong quá trình xử lý" });
 	}
+})
+
+router.get("/favourite", authenticate, async (req, res)=>{
+	const email = req.session.email;
+	const favouriteStories = await storyQuery.getFavouriteStory(email);
+	res.render("story/favourite", {favouriteStories: favouriteStories});
 })
 module.exports = router;

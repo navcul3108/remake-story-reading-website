@@ -55,7 +55,7 @@ html
                 p.d-inline= lastName
               .dropdown-menu.dropdown-menu-right(aria-labelledby="accountDropdown")
                 if isAdmin 
-                  a.dropdown-item(href="/story/upload") 
+                  a.dropdown-item(href="/story/upload/method") 
                     span(style="color: #de8971").fa-2x.fas.fa-upload.mr-2
                     h5(style="color: #de8971").d-inline Đăng tải truyện
                   a.dropdown-item(href="/genre/manage") 
@@ -65,10 +65,10 @@ html
                     span(style="color: #a7d0cd").fa-2x.fas.fa-book.mr-2
                     h5(style="color: #a7d0cd").d-inline Quản lý danh sách truyện                    
                 else 
-                  a.dropdown-item 
+                  a.dropdown-item(href="/users/profile") 
                     span.fa-2x.fas.fa-id-badge.mr-2
                     h5.d-inline Hồ sơ
-                  a.dropdown-item 
+                  a.dropdown-item(href="/story/favourite") 
                     span.fa-2x.fas.fa-star.mr-2
                     h5.d-inline Danh sách yêu thích
                   a.dropdown-item  

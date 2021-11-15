@@ -78,6 +78,42 @@ async function splitStoryIntoChapters(filePath, id, genreId, chapters) {
     return true;
 }
 
+/**
+ * Read each PDF file and take number of pages of it and save into @param chapters
+ *
+ * @param {Array} filePaths
+ * @param {Array} chapters
+ * @returns {Object} chapters
+ */
+async function extractPDFNumPages(filePaths, chapters){
+    let currentPageNumber = 0;
+    for(let i=0;i<chapters.length;i++){
+        let pdf = scissors(path.resolve(filePaths[i]));
+        let num_pages = await pdf.getNumPages();
+        chapters[i].start_page = currentPageNumber+1;
+        chapters[i].end_page = currentPageNumber+num_pages+1;
+        currentPageNumber+= (num_pages+1);
+        pdf.cleanup();
+    }
+    return [chapters, currentPageNumber]
+}
+
+/**
+ * Move uploaded file to public folder
+ *
+ * @param {Array} temporFilePaths
+ * @param {Array} publicFilePaths
+ */
+function moveTemporaryFilesToPublicFolder(temporFilePaths, publicFilePaths){
+    if(temporFilePaths.length !== publicFilePaths.length){
+        throw "temporFilePaths and publicFilePaths must have same length";
+    }
+    else{
+        for(let i=0;i<temporFilePaths.length;i++){
+            fs.renameSync(temporFilePaths[i], publicFilePaths[i]);
+        }
+    }
+}
 
 async function createStoryChapters(id, chapters) {
     const conn = await mysql.createConnection(connConfig);
@@ -100,7 +136,7 @@ async function createStoryChapters(id, chapters) {
     return isSucess;
 }
 
-async function createStory(id, name, author, description, image_path, num_chapters, genre_id, num_pages, chapters, uploadFilePath) {
+async function createStory(id, name, author, description, image_path, num_chapters, genre_id, num_pages, chapters, uploadFilePath=null) {
     const conn = await mysql.createConnection(connConfig);
     let isSucess = true;
     const now = new Date();
@@ -114,7 +150,7 @@ async function createStory(id, name, author, description, image_path, num_chapte
     await conn.end();
     if (isSucess) {
         isSucess = await createStoryChapters(id, chapters);
-        if (isSucess) {
+        if (isSucess && uploadFilePath!==null) {
             isSucess = await splitStoryIntoChapters(uploadFilePath, id, genre_id, chapters);
         }
     }
@@ -131,17 +167,20 @@ async function listStory(genre_id) {
     else {
         [rows, _] = await conn.query("Select id, name, author, image_path, genre_id, rating From story where genre_id = ?", [genre_id]);
     }
-    await conn.end();
     let result = [];
-    for (row of rows)
+    for (row of rows){
+        let [rows2, _] = await conn.query("Select avg_rating from average_rating where story_id=?", [row.id]);
+        let rating = rows2.length===1? rows2[0].avg_rating.toString().slice(0, 3) : "0";
         result.push({
             id: row.id,
             name: row.name,
             author: row.author,
             genre_id: row.genre_id,
             image_path: row.image_path,
-            rating: row.rating
+            rating: rating
         })
+    }
+    await conn.end();
     return result;
 }
 
@@ -223,7 +262,7 @@ async function getChapterInformation(id, index) {
         if (index > 1)
             chapter_info.prev_link = `/story/read?id=${id}&index=${index - 1}`;
 
-        if (index < rows2[0].num_chapters - 1)
+        if (index < rows2[0].num_chapters)
             chapter_info.next_link = `/story/read?id=${id}&index=${index + 1}`;
 
         await conn.end();
@@ -294,6 +333,16 @@ async function checkUserReviewedStory(email, story_id){
     return rows.length>0;
 }
 
+async function getFavouriteStory(email){
+    const conn = await mysql.createConnection(connConfig);
+    const [rows, _] = await conn.query("Select id, `name`, author, image_path, rate from favourite where email=?", [email]);
+    return rows.map((row, _)=>{
+        return {
+            ...row            
+        }
+    })
+}
+
 module.exports = {
     createStory: createStory,
     getStoryInformation: getStoryInformation,
@@ -306,5 +355,8 @@ module.exports = {
     getAllStory: getAllStory,
     rateStory: rateStory,
     checkUserReviewedStory: checkUserReviewedStory,
-    getAllChapters: getAllChapters
+    getAllChapters: getAllChapters,
+    extractPDFNumPages,
+    moveTemporaryFilesToPublicFolder,
+    getFavouriteStory
 }

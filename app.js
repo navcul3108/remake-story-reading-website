@@ -10,6 +10,7 @@ const usersRouter = require('./routes/users');
 const genreRouter = require("./routes/genre");
 const chapterRouter = require("./routes/chapter");
 const commentRouter = require("./routes/comment")
+const apiRouter = require("./routes/api")
 const { writeLocalData } = require("./routes/utils")
 
 var app = express();
@@ -38,6 +39,7 @@ app.use('/users', usersRouter);
 app.use("/genre", genreRouter);
 app.use("/chapter", chapterRouter);
 app.use("/comment", commentRouter);
+app.use("/api", apiRouter);
 
 app.get("/", (req, res) => {
 	res.redirect("story/");
