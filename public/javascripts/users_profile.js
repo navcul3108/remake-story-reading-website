@@ -58,7 +58,11 @@ $(document).ready(function () {
                             style: "width: 40%"
                         }
                     }
-                ]
+                ],
+                messages: {
+                    submit: "Cập nhật",
+                    clear: "Hủy bỏ"
+                }
             })
 
             form.bind("submit", (e)=>{   

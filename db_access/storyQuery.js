@@ -186,7 +186,7 @@ async function listStory(genre_id) {
 
 async function getStoryInformation(story_id, return_chapters = false) {
     const conn = await mysql.createConnection(connConfig);
-    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, rating, genre_name, genre_description From story_and_genre_view where id = ?", [story_id])
+    const [rows, fields] = await conn.query("Select id, `name`, `description`, author, upload_time, last_modified, image_path, num_chapters, genre_id, num_pages, genre_name, genre_description From story_and_genre_view where id = ?", [story_id])
     if (rows.length == 1) {
         const row = rows[0];
         let story_info = {
@@ -200,7 +200,6 @@ async function getStoryInformation(story_id, return_chapters = false) {
             num_chapters: row.num_chapters,
             genre_id: row.genre_id,
             num_pages: row.num_pages,
-            rating: row.rating,
             genre_name: row.genre_name,
             genre_description: row.genre_description
         };

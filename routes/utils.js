@@ -45,6 +45,7 @@ function writeLocalData(req, res, next){
         res.locals.email=req.session.email;
         res.locals.lastName = req.session.lastName;
         res.locals.isAdmin = req.session.isAdmin;
+        res.locals.avatarUrl = req.session.avatarUrl;
     }
     next();
 }

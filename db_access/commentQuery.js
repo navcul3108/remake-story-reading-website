@@ -76,14 +76,16 @@ async function replyComment(story_id, email, comment_index, content){
 async function getAllStoryComment(story_id){
     const conn = await mysql.createConnection(connConfig);
     try{
-        let comment_rows = (await conn.query("Select email, post_time, `index`, content From story_comment where story_id = ? Order By `index`", [story_id]))[0];
-        let reply_rows = (await conn.query("Select email, post_time, comment_index, reply_index, content From story_reply where story_id = ? Order By comment_index, reply_index", [story_id]))[0];
+        let comment_rows = (await conn.query("Select account.email, avatar_url, post_time, `index`, content From story_comment join account on story_comment.email=account.email where story_id = ? Order By `index`", [story_id]))[0];
+        let reply_rows = (await conn.query("Select account.email, avatar_url, post_time, comment_index, reply_index, content From story_reply join account on story_reply.email=account.email where story_id = ? Order By comment_index, reply_index", [story_id]))[0];
+        let uniqueEmails = [];
         let all_replies = reply_rows.map((text_row, _)=>{
             return {
                 comment_index: text_row.comment_index,
                 post_time: text_row.post_time.toLocaleString(),
                 reply_index: text_row.reply_index,
                 email: text_row.email,
+                avatarUrl: text_row.avatar_url,
                 content: text_row.content
             };
         });
@@ -94,6 +96,7 @@ async function getAllStoryComment(story_id){
                 email: comment.email,
                 content: comment.content,
                 post_time: comment.post_time.toLocaleString(),
+                avatarUrl: comment.avatar_url,
                 replies: replies
             })
         }

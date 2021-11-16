@@ -16,7 +16,8 @@ function changeNumberChapters(){
     }
 
     $("#multi-chapter-upload").kendoForm({
-        items: formOptionItems
+        items: formOptionItems,
+
     })
     $("<div><input name='chapterFiles' class='chapter-upload' type='file'/></div>").insertAfter($("#multi-chapter-upload > fieldset"))
     $("#multi-chapter-upload .k-form-buttons").remove();
@@ -93,7 +94,11 @@ $(document).ready(function(){
         }
     ]
     let form = $("#uploadForm").kendoForm({
-        items: formOptionItems
+        items: formOptionItems,
+        messages: {
+            submit: "Cập nhật",
+            clear: "Hủy bỏ"
+        }
     });
 
 

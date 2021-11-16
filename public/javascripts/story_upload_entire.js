@@ -35,7 +35,11 @@ $(document).ready(function(){
                 label: "Specify chapter page",
                 items: []
             }
-        ]
+        ],
+        messages: {
+            submit: "Đăng tải",
+            clear: "Hủy bỏ"
+        }
     });
 
 

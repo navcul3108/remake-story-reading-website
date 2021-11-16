@@ -38,19 +38,20 @@ async function createAccount(email, password, firstName, lastName){
  */
 async function authenticateAccount(email, password){
     const conn = await mysql.createConnection(connConfig);
-    const queryString = `Select last_name From account where email="${email}" and password="${password}"`;
+    const queryString = `Select last_name, avatar_url From account where email="${email}" and password="${password}"`;
 
     let [rows, _] = await conn.execute(queryString);
     const isValid = rows.length ==1;
     let isAdmin = false;
     let lastName = null;
+    const avatarUrl = rows[0].avatar_url;
     if(isValid){
         lastName = rows[0].last_name;
         let [rows2, _] = await conn.execute(`Select * from role where email="${email}" and role="admin"`);
         isAdmin = rows2.length ==1;
     }
     conn.end();
-    return [isValid, isAdmin, lastName];
+    return [isValid, isAdmin, lastName, avatarUrl];
 }
 
 async function getAccountProfile(email){

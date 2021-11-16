@@ -19,11 +19,12 @@ router.post("/login", async (req, res) => {
 	const password = body.password;
 	const originalUrl = body.originUrl
 
-	const [isValid, isAdmin, lastName] = await userQuery.authenticateAccount(email, password);
+	const [isValid, isAdmin, lastName, avatarUrl] = await userQuery.authenticateAccount(email, password);
 	if (isValid) {
 		req.session.email = email;
 		req.session.isAdmin = isAdmin;
 		req.session.lastName = lastName;
+		req.session.avatarUrl = avatarUrl;
 		if(originalUrl && !originalUrl.includes("/users/login"))
 			res.redirect(originalUrl);
 		else
@@ -103,9 +104,14 @@ router.post("/profile/upload-avatar", uploader.single("avatarImage"), async (req
 	const oldPath = req.body.oldPath; 
 	if(await userQuery.updateAvatar(email, "/images/avatar/"+avatarFile.filename)){
 		if(oldPath!=="/images/avatar/default.png")
-			fs.unlink(resolve(oldPath))
-		fs.renameSync(resolve(avatarFile.path), resolve("public/images/avatar/"+avatarFile.filename));
-		res.redirect("/users/profile")
+			fs.unlink(resolve("public/"+oldPath), (err)=>{
+				if(err){
+					console.error(err);
+				}
+				fs.renameSync(resolve(avatarFile.path), resolve("public/images/avatar/"+avatarFile.filename));
+				req.session.avatarUrl = "/images/avatar/"+avatarFile.filename;
+				res.redirect("/users/profile")
+			})
 	}
 	else{
 		res.render("error", {message: "Có lỗi xảy ra trong quá trình xử lý!"});

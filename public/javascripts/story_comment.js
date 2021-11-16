@@ -1,6 +1,8 @@
+const avatarUrl = $("#avatar-img").attr("src");
+
 function appendPostedComment(email, post_time, content){    
     let comment = $(`<div class="media mt-3">
-                        <img class="mr-3 rounded-circle" alt="User avatar" src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png">
+                        <img class="mr-3 rounded-circle" alt="User avatar" src="${avatarUrl}">
                         <div class="media-body">
                             <div class="row">
                                 <div class="col-8 d-flex">
@@ -27,7 +29,7 @@ function appendPostedReply(email, post_time, comment_index, content){
     let replyElement = $(`
     <div class="media mt-4"><a class="pr-3" href="#"><img class="rounded-circle"
         alt="User avatar"
-        src="https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png"></a>
+        src="${avatarUrl}"></a>
         <div class="media-body">
             <div class="row">
                 <div class="col-12 d-flex">

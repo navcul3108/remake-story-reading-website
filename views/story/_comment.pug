@@ -35,7 +35,7 @@
           .col-md-12#comment-list
             each comment in comments
               .media.mt-3
-                img.mr-3.rounded-circle(alt = 'User avatar' src='https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png')
+                img.mr-3.rounded-circle(alt = 'User avatar' src=`${comment.avatarUrl}`)
                 .media-body
                   .row
                     .col-8.d-flex
@@ -54,7 +54,7 @@
                     each reply in comment.replies
                       .media.mt-4
                         a.pr-3(href='#')
-                          img.rounded-circle(alt='User avatar' src='https://windows79.com/wp-content/uploads/2021/02/Thay-the-hinh-dai-dien-tai-khoan-nguoi-dung-mac.png')
+                          img.rounded-circle(alt='User avatar' src=`${reply.avatarUrl}`)
                         .media-body
                           .row
                             .col-12.d-flex
